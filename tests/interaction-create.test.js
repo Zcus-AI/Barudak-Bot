@@ -69,8 +69,43 @@ async function testCooldownBlockUsesMinimumRetryOneSecond() {
   assert.ok(repliedPayload.content.includes('1 detik'), 'Retry message should never show 0 detik');
 }
 
+async function testBenignUnknownInteractionErrorDoesNotThrow() {
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-3' },
+    replied: false,
+    deferred: false,
+    isChatInputCommand: () => true,
+    reply: async () => {
+      const err = new Error('Unknown interaction');
+      err.code = 10062;
+      throw err;
+    },
+    followUp: async () => {
+      throw new Error('followUp should not be called');
+    }
+  };
+
+  const client = {
+    commands: new Map([
+      [
+        'ping',
+        {
+          execute: async () => {
+            throw new Error('forced command failure');
+          }
+        }
+      ]
+    ]),
+    cooldowns: {}
+  };
+
+  await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
+  await testBenignUnknownInteractionErrorDoesNotThrow();
   console.log('interaction-create.test.js passed');
 })();

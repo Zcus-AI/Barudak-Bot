@@ -177,3 +177,17 @@ File Diubah:
 Deskripsi: Menambahkan fallback aman saat `client.cooldowns` tidak memiliki method yang lengkap, validasi user id sebelum membangun cooldown key, serta clamp retry cooldown minimal 1 detik agar pesan user tidak menampilkan 0 detik. Ditambah unit test untuk memastikan fallback validation dan behavior cooldown-block tetap benar.
 Status Runtime: Lolos syntax check + test (cooldown, uptime, interaction-create)
 Next Plan: Tambah validasi command metadata (nama unik/format) saat command loader bootstrap.
+
+[ITERATION #14]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Benign interaction error guard pada response path
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan deteksi error response interaction yang bersifat benign (Unknown Interaction/Already Acknowledged) agar tidak diperlakukan sebagai warning keras. Handler kini menggunakan fallback `commandName` aman saat logging error, sehingga log tetap jelas walau metadata interaction tidak lengkap.
+Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
+Next Plan: Tambah guard error ringan pada command loader untuk file command yang throw saat require.

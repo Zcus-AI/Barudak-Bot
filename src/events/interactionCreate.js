@@ -1,8 +1,16 @@
 const logger = require('../utils/logger');
 
+function isBenignInteractionResponseError(error) {
+  const code = Number(error?.code || error?.rawError?.code || 0);
+  const message = String(error?.message || '').toLowerCase();
+  return code === 10062 || code === 40060 || message.includes('unknown interaction');
+}
+
 module.exports = {
   name: 'interactionCreate',
   async execute(interaction, client) {
+    const commandName = interaction?.commandName || 'unknown';
+
     try {
       if (!interaction.isChatInputCommand()) return;
 
@@ -46,7 +54,7 @@ module.exports = {
 
       await command.execute(interaction, client);
     } catch (error) {
-      logger.error(`Gagal jalankan /${interaction.commandName}`, error);
+      logger.error(`Gagal jalankan /${commandName}`, error);
       try {
         if (interaction.replied || interaction.deferred) {
           await interaction.followUp({ content: 'Terjadi error saat mengeksekusi command.', ephemeral: true });
@@ -54,7 +62,11 @@ module.exports = {
           await interaction.reply({ content: 'Terjadi error saat mengeksekusi command.', ephemeral: true });
         }
       } catch (replyError) {
-        logger.warn('Gagal mengirim error response interaction', replyError);
+        if (isBenignInteractionResponseError(replyError)) {
+          logger.info(`Skip kirim error response /${commandName} (interaction sudah tidak valid)`);
+        } else {
+          logger.warn('Gagal mengirim error response interaction', replyError);
+        }
       }
     }
   }
