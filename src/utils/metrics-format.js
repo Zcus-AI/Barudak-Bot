@@ -34,10 +34,13 @@ function getInteractionLatencyMs(interaction) {
 }
 
 function formatRuntimeInfo(runtime = process) {
-  const platform = String(runtime?.platform || process.platform);
+  const rawPlatform = String(runtime?.platform || process.platform).trim();
+  const safePlatform = rawPlatform || process.platform;
+
   const pid = Number(runtime?.pid || process.pid);
   const safePid = Number.isFinite(pid) && pid > 0 ? Math.floor(pid) : process.pid;
-  return `${platform} | pid:${safePid}`;
+
+  return `${safePlatform} | pid:${safePid}`;
 }
 
 module.exports = {

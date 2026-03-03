@@ -490,3 +490,17 @@ File Diubah:
 Deskripsi: Mengekstrak format runtime host (`platform | pid`) menjadi helper `formatRuntimeInfo()` di util metrics, lalu /uptime memakai helper tersebut. Ini merapikan tanggung jawab formatting dan memudahkan reuse lintas command.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan memindahkan threshold slow-command ke config/env agar mudah dituning per environment.
+
+[ITERATION #37]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi nilai platform pada formatter runtime info
+File Dibuat:
+- (none)
+File Diubah:
+- src/utils/metrics-format.js
+- tests/metrics-format.test.js
+- dev_log.md
+Deskripsi: Menambahkan validasi/normalisasi pada `formatRuntimeInfo()` agar nilai `platform` yang kosong/whitespace tidak menghasilkan output runtime yang buruk. Formatter kini fallback aman ke `process.platform`.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan validasi serupa untuk formatter lain bila menerima input eksternal tidak terkontrol.

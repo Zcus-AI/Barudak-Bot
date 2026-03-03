@@ -18,5 +18,6 @@ assert.strictEqual(getInteractionLatencyMs({ createdTimestamp: -100 }), null);
 assert.ok(getInteractionLatencyMs({ createdTimestamp: Date.now() - 50 }) >= 0);
 assert.strictEqual(formatRuntimeInfo({ platform: 'linux', pid: 1234 }), 'linux | pid:1234');
 assert.ok(formatRuntimeInfo({ platform: 'darwin', pid: 'invalid' }).startsWith('darwin | pid:'));
+assert.ok(formatRuntimeInfo({ platform: '   ', pid: 777 }).startsWith(`${process.platform} | pid:777`));
 
 console.log('metrics-format.test.js passed');
