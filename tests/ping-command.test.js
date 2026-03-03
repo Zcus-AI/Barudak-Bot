@@ -78,6 +78,11 @@ const metricsBoundaryPoor = cmd.getPingMetrics({ createdTimestamp: Date.now() - 
 assert.strictEqual(metricsBoundaryPoor.badge, '🔴');
 assert.strictEqual(metricsBoundaryPoor.tier, 'poor');
 
+const metricsStringPing = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: '120' } });
+assert.strictEqual(metricsStringPing.wsPingMs, 120);
+assert.strictEqual(metricsStringPing.badge, '🟡');
+assert.strictEqual(metricsStringPing.tier, 'medium');
+
 const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
 assert.strictEqual(metricsInvalid.latencyMs, null);
 assert.strictEqual(metricsInvalid.wsPingMs, null);
