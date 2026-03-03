@@ -1689,3 +1689,23 @@ File Diubah:
 Deskripsi: Menambahkan info log setelah `client.login()` berhasil yang memuat identitas bot (`tag`/`id`) serta durasi login dalam ms. Ini memudahkan observability startup dan diagnosis keterlambatan koneksi ke Discord.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan warning jika durasi login melewati threshold tertentu untuk deteksi dini isu jaringan.
+
+[ITERATION AUTO #89]
+Tanggal: 2026-03-03T07:12:38.307Z
+Jenis Perubahan: Logging Improvement
+Deskripsi: Logging Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #90]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Tambahan metrik HeapUsed pada output /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan baris `📦 RAM (HeapUsed)` pada command /uptime untuk memberi visibilitas penggunaan heap process selain RSS. Ini membantu diagnosis memory pressure Node.js dengan konteks yang lebih lengkap.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan penambahan indikasi persentase heap terhadap total limit jika ingin observability memory lebih detail.

@@ -90,12 +90,23 @@ assert.ok(
   cmd
     .buildUptimeMessage({
       uptime: () => -10,
-      memoryUsage: () => ({ rss: 'invalid' }),
+      memoryUsage: () => ({ rss: 'invalid', heapUsed: 'invalid' }),
       platform: 'linux',
       pid: 123
     })
     .includes('🧠 RAM (RSS): 0 B'),
   'buildUptimeMessage should sanitize invalid rss values'
+);
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => -10,
+      memoryUsage: () => ({ rss: 'invalid', heapUsed: 'invalid' }),
+      platform: 'linux',
+      pid: 123
+    })
+    .includes('📦 RAM (HeapUsed): 0 B'),
+  'buildUptimeMessage should sanitize invalid heapUsed values'
 );
 
 (async () => {
@@ -111,6 +122,7 @@ assert.ok(
   assert.strictEqual(payload.ephemeral, true, 'uptime reply should be ephemeral');
   assert.ok(payload.content.includes('⏱️ Uptime:'), 'uptime reply should contain uptime label');
   assert.ok(payload.content.includes('🧠 RAM (RSS):'), 'uptime reply should contain memory label');
+  assert.ok(payload.content.includes('📦 RAM (HeapUsed):'), 'uptime reply should contain heap memory label');
   assert.ok(payload.content.includes('🧮 UptimeSec:'), 'uptime reply should contain raw uptime seconds label');
   assert.ok(payload.content.includes('🖥️ Runtime:'), 'uptime reply should contain runtime label');
   assert.ok(payload.content.includes('pid:'), 'uptime reply should include process pid');

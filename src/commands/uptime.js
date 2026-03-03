@@ -4,6 +4,7 @@ const UPTIME_LABELS = {
   uptime: '⏱️ Uptime',
   uptimeSec: '🧮 UptimeSec',
   rss: '🧠 RAM (RSS)',
+  heapUsed: '📦 RAM (HeapUsed)',
   runtime: '🖥️ Runtime',
   node: '🧩 Node',
   arch: '🏗️ Arch'
@@ -46,6 +47,7 @@ function buildUptimeMessage(runtime = process) {
 
   const uptimeText = formatDuration(uptimeSeconds);
   const rssText = formatBytes(memoryUsage?.rss);
+  const heapUsedText = formatBytes(memoryUsage?.heapUsed);
   const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
   const { runtimeText, nodeVersion, arch } = getRuntimeMeta(runtime);
 
@@ -53,6 +55,7 @@ function buildUptimeMessage(runtime = process) {
     `${UPTIME_LABELS.uptime}: ${uptimeText}`,
     `${UPTIME_LABELS.uptimeSec}: ${uptimeSecondsRaw}`,
     `${UPTIME_LABELS.rss}: ${rssText}`,
+    `${UPTIME_LABELS.heapUsed}: ${heapUsedText}`,
     `${UPTIME_LABELS.runtime}: ${runtimeText}`,
     `${UPTIME_LABELS.node}: ${nodeVersion}`,
     `${UPTIME_LABELS.arch}: ${arch}`
