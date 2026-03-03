@@ -62,10 +62,6 @@ class AutonomousEngine {
     return { ok: true, stdout, stderr, status: result.status };
   }
 
-  fileExists(relPath) {
-    return fs.existsSync(safeResolve(relPath));
-  }
-
   parseChangedFiles(statusOutput) {
     const files = [];
     for (const line of statusOutput.split('\n')) {
