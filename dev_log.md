@@ -704,3 +704,17 @@ File Diubah:
 Deskripsi: Menormalisasi `commandName` (trim) di awal handler untuk dipakai pada semua log sukses/error, sehingga log tidak lagi menampilkan nama command dengan spasi berlebih (mis. `/  ping  `). Ini meningkatkan keterbacaan dan konsistensi observability.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah helper prefix log command terstandar agar format log lintas event lebih seragam.
+
+[ITERATION #53]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /uptime menampilkan arsitektur runtime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan informasi arsitektur proses (`process.arch`) pada output /uptime melalui baris baru `🏗️ Arch`. Fitur ini membantu diagnosis environment ketika bot berjalan di host dengan arsitektur berbeda.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan opsi output compact agar detail runtime bisa dipadatkan untuk channel dengan batas tampilan ketat.

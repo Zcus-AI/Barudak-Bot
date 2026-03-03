@@ -10,8 +10,9 @@ function buildUptimeMessage(runtime = process) {
   const rssText = formatBytes(memoryUsage?.rss);
   const runtimeText = formatRuntimeInfo(runtime);
   const nodeVersion = runtime?.version || process.version;
+  const arch = String(runtime?.arch || process.arch);
 
-  return `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}`;
+  return `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}\n🏗️ Arch: ${arch}`;
 }
 
 module.exports = {

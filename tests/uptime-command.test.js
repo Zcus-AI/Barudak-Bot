@@ -13,9 +13,22 @@ assert.ok(
       memoryUsage: () => ({ rss: 2048 }),
       platform: 'linux',
       pid: 999,
-      version: 'v99.0.0'
+      version: 'v99.0.0',
+      arch: 'arm64'
     })
     .includes('🧩 Node: v99.0.0')
+);
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => 1,
+      memoryUsage: () => ({ rss: 1 }),
+      platform: 'linux',
+      pid: 1,
+      version: 'v1.0.0',
+      arch: 'arm64'
+    })
+    .includes('🏗️ Arch: arm64')
 );
 assert.ok(
   cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes('🧠 RAM (RSS):'),
@@ -39,6 +52,7 @@ assert.ok(
   assert.ok(payload.content.includes('pid:'), 'uptime reply should include process pid');
   assert.ok(payload.content.includes('🧩 Node:'), 'uptime reply should include node version label');
   assert.ok(payload.content.includes(process.version), 'uptime reply should include current node version');
+  assert.ok(payload.content.includes('🏗️ Arch:'), 'uptime reply should include architecture label');
 
   console.log('uptime-command.test.js passed');
 })();
