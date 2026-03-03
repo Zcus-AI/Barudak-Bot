@@ -53,7 +53,13 @@ class AutonomousEngine {
     const stderr = (result.stderr || '').trim();
 
     if (stdout) logger.info(`${label} stdout: ${stdout}`);
-    if (stderr) logger.warn(`${label} stderr: ${stderr}`);
+    if (stderr) {
+      if (result.status === 0) {
+        logger.info(`${label} stderr: ${stderr}`);
+      } else {
+        logger.warn(`${label} stderr: ${stderr}`);
+      }
+    }
 
     if (result.status !== 0) {
       return { ok: false, stdout, stderr, status: result.status };
@@ -126,11 +132,19 @@ class AutonomousEngine {
     const stderr = (result.stderr || '').trim();
 
     if (stdout) logger.info(`OpenClaw agent stdout: ${stdout}`);
-    if (stderr) logger.warn(`OpenClaw agent stderr: ${stderr}`);
 
     if (result.status !== 0) {
+      if (stderr) logger.error(`OpenClaw agent stderr: ${stderr}`);
       logger.error(`OpenClaw agent failed: ${stderr || stdout || `exit ${result.status}`}`);
       return false;
+    }
+
+    if (stderr) {
+      if (stderr.includes('gateway token mismatch') && stderr.includes('falling back to embedded')) {
+        logger.info('OpenClaw agent: gateway unauthorized, fallback to embedded runtime succeeded');
+      } else {
+        logger.info(`OpenClaw agent stderr: ${stderr}`);
+      }
     }
 
     logger.info('OpenClaw agent finished');
