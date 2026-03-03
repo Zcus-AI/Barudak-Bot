@@ -9,6 +9,12 @@ function commandLabel(commandName) {
   return `/${normalized}`;
 }
 
+function interactionRef(interaction) {
+  const raw = String(interaction?.id || '').trim();
+  if (!raw) return 'n/a';
+  return raw.slice(-6);
+}
+
 function isBenignInteractionResponseError(error) {
   const code = Number(error?.code || error?.rawError?.code || 0);
   const message = String(error?.message || '').toLowerCase();
@@ -82,7 +88,7 @@ module.exports = {
       const interactionCommandName = interaction.commandName.trim();
       const scope = interaction.guildId ? 'guild' : 'dm';
       const userIdForLog = interaction.user?.id || 'unknown-user';
-      logger.info(`Terima ${commandLabel(interactionCommandName)} dari ${userIdForLog} di ${scope}`);
+      logger.info(`Terima ${commandLabel(interactionCommandName)} dari ${userIdForLog} di ${scope} ref:${interactionRef(interaction)}`);
 
       const command = client.commands.get(interactionCommandName);
       if (!command) {
