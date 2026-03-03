@@ -985,6 +985,19 @@ Deskripsi: Memperbaiki wrapper event handler agar error sinkron dari `event.exec
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah test terisolasi untuk memastikan wrapper event menangkap throw sinkron dan reject async secara konsisten.
 
+[ITERATION #73]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Coverage batas threshold badge latency /ping
+File Dibuat:
+- (none)
+File Diubah:
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan unit test batas klasifikasi badge koneksi pada /ping (100ms, 250ms, dan 251ms) untuk mengunci behavior threshold agar tidak regresi saat refactor berikutnya.
+Status Runtime: Lolos seluruh test utama (ping, uptime, cooldown, interaction-create, metrics-format).
+Next Plan: Tambah test integrasi ringan untuk memastikan payload /ping tetap backward-compatible saat metrik baru ditambahkan.
+
 [ITERATION AUTO #1]
 Tanggal: 2026-03-03T04:43:12.267Z
 Jenis Perubahan: Refactor Improvement
@@ -995,4 +1008,10 @@ Status: Completed
 Tanggal: 2026-03-03T04:45:40.889Z
 Jenis Perubahan: Validation Improvement
 Deskripsi: Validation Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION AUTO #3]
+Tanggal: 2026-03-03T04:47:47.889Z
+Jenis Perubahan: Error Handling Improvement
+Deskripsi: Error Handling Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
 Status: Completed
