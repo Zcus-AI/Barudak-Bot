@@ -1,6 +1,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFile } = require('node:child_process');
+const { promisify } = require('node:util');
 const logger = require('../utils/logger');
+
+const execFileAsync = promisify(execFile);
 
 class AutonomousEngine {
   constructor(options = {}) {
@@ -39,17 +43,41 @@ class AutonomousEngine {
     if (missing.length > 0) {
       return {
         action: 'Bug Fix',
-        details: `File penting hilang: ${missing.map((m) => path.basename(m)).join(', ')}`
+        details: `File penting hilang: ${missing.map((m) => path.basename(m)).join(', ')}`,
+        changed: false
       };
     }
 
     return {
       action: 'Feature Triage',
-      details: 'Project stabil. Rekomendasi fitur kecil berikutnya: moderation warn command dengan permission check.'
+      details: 'Project stabil. Belum ada perubahan file otomatis pada iterasi ini.',
+      changed: false
     };
   }
 
-  runOneIteration() {
+  async runGitIntegration() {
+    try {
+      const { stdout } = await execFileAsync('git', ['status', '--porcelain']);
+      if (!stdout.trim()) {
+        return;
+      }
+
+      await execFileAsync('git', ['add', '.']);
+      await execFileAsync('git', ['commit', '-m', 'auto: iteration update']);
+      logger.info('Git commit success');
+
+      try {
+        await execFileAsync('git', ['push']);
+        logger.info('Git push success');
+      } catch (pushError) {
+        logger.error('Git push failed', pushError.stderr || pushError.message || pushError);
+      }
+    } catch (error) {
+      logger.error('Git integration failed', error.stderr || error.message || error);
+    }
+  }
+
+  async runOneIteration() {
     this.iterationCount += 1;
     logger.info('Autonomous iteration started');
 
@@ -61,7 +89,11 @@ class AutonomousEngine {
     }
 
     const analysis = this.analyzeProject();
-    this.appendDevLog(analysis.action, analysis.details);
+    if (analysis.changed) {
+      this.appendDevLog(analysis.action, analysis.details);
+    }
+
+    await this.runGitIntegration();
     logger.info('Autonomous iteration completed');
   }
 
