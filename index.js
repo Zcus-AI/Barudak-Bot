@@ -196,7 +196,17 @@ async function bootstrap() {
     return;
   }
 
-  await client.login(config.token);
+  try {
+    await client.login(config.token);
+  } catch (error) {
+    if (error?.code === 'TokenInvalid') {
+      logger.error('Login Discord gagal: token tidak valid (TokenInvalid).');
+    } else {
+      logger.error('Login Discord gagal karena error tak terduga.', error);
+    }
+    throw error;
+  }
+
   await runAutonomousIteration();
 }
 

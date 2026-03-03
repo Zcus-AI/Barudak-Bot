@@ -665,3 +665,16 @@ File Diubah:
 Deskripsi: Menambahkan validasi defensif di `buildUptimeMessage()` agar aman ketika object runtime tidak menyediakan `uptime()` atau `memoryUsage()`. Pada kasus ini, builder otomatis fallback ke `process` sehingga command tidak crash.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi fallback serupa pada command lain yang menerima dependency injection runtime/client.
+
+[ITERATION #50]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening error login Discord saat bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan try/catch khusus di `client.login()` agar error login lebih terarah: kasus `TokenInvalid` diberi pesan spesifik, sementara error lain tetap dilog lengkap. Error tetap dilempar ke handler atas agar flow kegagalan tetap konsisten.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah klasifikasi kode error login lain (mis. network/ratelimit) untuk diagnosis startup yang lebih cepat.
