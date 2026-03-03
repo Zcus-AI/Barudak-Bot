@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+bots.json
+npm-debug.log*
+tokens.json
+
+

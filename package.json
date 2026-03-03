@@ -1,0 +1,29 @@
+{
+  "name": "discord-multibot-voice-defend",
+  "version": "1.0.0",
+  "description": "Controller bot to manage multiple Discord bots and keep them in voice channels",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "npm run build && node dist/index.js",
+    "createbot": "npm run build && node dist/scripts/createbot.js",
+    "batch:add": "npm run build && node dist/scripts/batch-add-bots.js",
+    "listbot": "npm run build && node dist/scripts/list-bots.js --file tokens.json",
+    "migrate:mysql": "npm run build && node dist/scripts/migrate-bots-json-to-mysql.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.19.0",
+    "@snazzah/davey": "^0.1.9",
+    "axios": "^1.13.5",
+    "discord.js": "^14.24.2",
+    "mysql2": "^3.14.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}
