@@ -122,9 +122,11 @@ function loadEvents(client) {
     }
 
     const handler = (...args) => {
-      Promise.resolve(event.execute(...args, client)).catch((error) => {
-        logger.error(`Event handler gagal: ${event.name} (${file})`, error);
-      });
+      Promise.resolve()
+        .then(() => event.execute(...args, client))
+        .catch((error) => {
+          logger.error(`Event handler gagal: ${event.name} (${file})`, error);
+        });
     };
 
     if (event.once) {

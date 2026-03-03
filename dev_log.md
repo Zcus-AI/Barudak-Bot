@@ -972,8 +972,27 @@ Deskripsi: Menambahkan `normalizeNodeVersion()` agar nilai `runtime.version` yan
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi ringan untuk metadata runtime lain jika ditemukan input injection yang tidak konsisten.
 
+[ITERATION #72]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening wrapper async event handler
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Memperbaiki wrapper event handler agar error sinkron dari `event.execute(...)` juga tertangkap dengan aman menggunakan pola `Promise.resolve().then(...)`. Sebelumnya, throw sinkron berpotensi lolos sebelum `.catch` terpasang.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah test terisolasi untuk memastikan wrapper event menangkap throw sinkron dan reject async secara konsisten.
+
 [ITERATION AUTO #1]
 Tanggal: 2026-03-03T04:43:12.267Z
 Jenis Perubahan: Refactor Improvement
 Deskripsi: Refactor Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION AUTO #2]
+Tanggal: 2026-03-03T04:45:40.889Z
+Jenis Perubahan: Validation Improvement
+Deskripsi: Validation Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
 Status: Completed
