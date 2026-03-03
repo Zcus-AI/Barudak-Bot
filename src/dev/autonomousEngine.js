@@ -15,6 +15,7 @@ class AutonomousEngine {
     this.running = false;
     this.timer = null;
     this.iterationCount = 0;
+    this.didBootImprovement = false;
   }
 
   readControl() {
@@ -71,9 +72,19 @@ class AutonomousEngine {
   }
 
   runOneImprovement() {
-    // Active improvement mode: setiap iterasi wajib menghasilkan perubahan nyata.
-    // Improvement paling aman dan konsisten: observability/logging update.
-    return this.applyLoggingImprovement();
+    // Anti-loop: lakukan improvement nyata sekali setelah boot/restart,
+    // iterasi berikutnya hanya observasi sampai ada target improvement berikutnya.
+    if (!this.didBootImprovement) {
+      this.didBootImprovement = true;
+      const result = this.applyLoggingImprovement();
+      return { ...result, changed: true };
+    }
+
+    return {
+      action: 'Observation',
+      details: 'Tidak ada target improvement baru. Menunggu perubahan backlog agar tidak loop spam.',
+      changed: false
+    };
   }
 
   async runGitIntegration() {
@@ -110,9 +121,11 @@ class AutonomousEngine {
     }
 
     const improvement = this.runOneImprovement();
-    this.appendDevLog(improvement.action, improvement.details);
+    if (improvement.changed) {
+      this.appendDevLog(improvement.action, improvement.details);
+      await this.runGitIntegration();
+    }
 
-    await this.runGitIntegration();
     logger.info('Autonomous iteration completed');
   }
 
@@ -134,6 +147,8 @@ class AutonomousEngine {
       return;
     }
 
+    const metrics = this.readMetrics();
+    this.iterationCount = Number(metrics.totalIterations || 0);
     this.running = true;
     this.scheduleNext();
   }
