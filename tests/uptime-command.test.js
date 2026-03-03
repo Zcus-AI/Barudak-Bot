@@ -22,6 +22,8 @@ assert.strictEqual(cmd.formatBytes(1024), '1.0 KB');
   assert.ok(payload.content.includes('🧠 RAM (RSS):'), 'uptime reply should contain memory label');
   assert.ok(payload.content.includes('🖥️ Runtime:'), 'uptime reply should contain runtime label');
   assert.ok(payload.content.includes('pid:'), 'uptime reply should include process pid');
+  assert.ok(payload.content.includes('🧩 Node:'), 'uptime reply should include node version label');
+  assert.ok(payload.content.includes(process.version), 'uptime reply should include current node version');
 
   console.log('uptime-command.test.js passed');
 })();

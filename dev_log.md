@@ -623,3 +623,17 @@ File Diubah:
 Deskripsi: Menambahkan log daftar command aktif setelah loader selesai (`Command aktif: ...`) dan menambahkan metadata `total=<n>` pada log sukses registrasi slash command (guild/global). Ini mempermudah audit startup dan verifikasi command yang benar-benar terpasang.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan sampling log untuk event loader agar startup log tetap ringkas pada project besar.
+
+[ITERATION #47]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /uptime menampilkan versi Node.js aktif
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan informasi versi Node.js (`process.version`) pada output /uptime untuk membantu diagnosa environment runtime dengan cepat. Fitur ini melengkapi info uptime/RAM/runtime yang sudah ada tanpa mengubah command flow.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan mode compact/verbose untuk output /uptime agar lebih fleksibel di channel sempit.
