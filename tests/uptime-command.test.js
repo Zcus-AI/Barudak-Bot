@@ -34,6 +34,21 @@ assert.ok(
   cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes('🧠 RAM (RSS):'),
   'buildUptimeMessage should fallback safely when uptime/memoryUsage methods are missing'
 );
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => {
+        throw new Error('uptime failed');
+      },
+      memoryUsage: () => {
+        throw new Error('memory failed');
+      },
+      platform: 'linux',
+      pid: 888
+    })
+    .includes('⏱️ Uptime:'),
+  'buildUptimeMessage should fallback safely when runtime methods throw'
+);
 
 (async () => {
   let payload = null;

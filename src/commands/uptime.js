@@ -1,10 +1,19 @@
 const { formatDuration, formatBytes, formatRuntimeInfo } = require('../utils/metrics-format');
 
+function safeRuntimeCall(runtime, fnName, fallbackValue) {
+  try {
+    if (runtime && typeof runtime[fnName] === 'function') {
+      return runtime[fnName]();
+    }
+  } catch (_error) {
+    // ignore runtime injection failures and use safe fallback
+  }
+  return fallbackValue;
+}
+
 function buildUptimeMessage(runtime = process) {
-  const uptimeSeconds =
-    runtime && typeof runtime.uptime === 'function' ? runtime.uptime() : process.uptime();
-  const memoryUsage =
-    runtime && typeof runtime.memoryUsage === 'function' ? runtime.memoryUsage() : process.memoryUsage();
+  const uptimeSeconds = safeRuntimeCall(runtime, 'uptime', process.uptime());
+  const memoryUsage = safeRuntimeCall(runtime, 'memoryUsage', process.memoryUsage());
 
   const uptimeText = formatDuration(uptimeSeconds);
   const rssText = formatBytes(memoryUsage?.rss);
