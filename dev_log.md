@@ -1151,3 +1151,22 @@ File Diubah:
 Deskripsi: Menambahkan atribut `tier` (good/medium/poor/unknown) ke metrik /ping dan menampilkannya pada pesan user (`Tier: ...`). Fitur ini memberi indikator tekstual tambahan selain badge emoji untuk memudahkan interpretasi kualitas koneksi.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan opsi toggle untuk menyembunyikan tier text bila user hanya ingin output ringkas.
+
+[ITERATION AUTO #6]
+Tanggal: 2026-03-03T05:11:22.611Z
+Jenis Perubahan: Feature Improvement
+Deskripsi: Feature Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #80]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Mapping terpusat badge ke tier pada command /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- dev_log.md
+Deskripsi: Merapikan `getLatencyTier()` dengan mengganti rantai `if` menjadi mapping `LATENCY_TIER_BY_BADGE`. Refactor ini membuat relasi badge→tier lebih deklaratif, memudahkan maintenance, dan tetap mempertahankan behavior output yang sama.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan satukan semua konstanta ping (badge/threshold/tier label) ke satu blok konfigurasi agar perubahan rule lebih sederhana.

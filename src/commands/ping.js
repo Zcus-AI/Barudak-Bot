@@ -40,12 +40,16 @@ function getLatencyBadge(wsPingMs) {
   return LATENCY_BADGES.bad;
 }
 
+const LATENCY_TIER_BY_BADGE = {
+  [LATENCY_BADGES.good]: 'good',
+  [LATENCY_BADGES.medium]: 'medium',
+  [LATENCY_BADGES.bad]: 'poor',
+  [LATENCY_BADGES.unknown]: 'unknown'
+};
+
 function getLatencyTier(wsPingMs) {
   const badge = getLatencyBadge(wsPingMs);
-  if (badge === LATENCY_BADGES.good) return 'good';
-  if (badge === LATENCY_BADGES.medium) return 'medium';
-  if (badge === LATENCY_BADGES.bad) return 'poor';
-  return 'unknown';
+  return LATENCY_TIER_BY_BADGE[badge] || LATENCY_TIER_BY_BADGE[LATENCY_BADGES.unknown];
 }
 
 function getIsoNow() {
