@@ -1074,3 +1074,22 @@ File Diubah:
 Deskripsi: Memperketat `normalizePingMs()` agar string whitespace (`'   '`) diperlakukan sebagai nilai invalid (null), bukan terkonversi menjadi 0ms. Ditambah unit test untuk memastikan perilaku ini tidak regresi.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi serupa pada normalisasi input lain yang bergantung pada coercion Number agar edge-case whitespace tidak lolos.
+
+[ITERATION #76]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Lazy fallback execution pada runtime call /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- dev_log.md
+Deskripsi: Mengubah `safeRuntimeCall()` agar menerima `fallbackFactory` (lazy) sehingga fallback tidak dieksekusi lebih awal. Ini mencegah potensi error saat fallback `process.uptime()`/`process.memoryUsage()` dievaluasi sebelum diperlukan, serta menambah guard jika fallback itu sendiri gagal.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah unit test terisolasi untuk jalur fallbackFactory failure bila helper diekspor untuk pengujian granular.
+
+[ITERATION AUTO #2]
+Tanggal: 2026-03-03T04:59:33.238Z
+Jenis Perubahan: Validation Improvement
+Deskripsi: Validation Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed

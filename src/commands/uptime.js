@@ -9,7 +9,7 @@ const UPTIME_LABELS = {
   arch: '🏗️ Arch'
 };
 
-function safeRuntimeCall(runtime, fnName, fallbackValue) {
+function safeRuntimeCall(runtime, fnName, fallbackFactory) {
   try {
     if (runtime && typeof runtime[fnName] === 'function') {
       return runtime[fnName]();
@@ -17,7 +17,12 @@ function safeRuntimeCall(runtime, fnName, fallbackValue) {
   } catch (_error) {
     // ignore runtime injection failures and use safe fallback
   }
-  return fallbackValue;
+
+  try {
+    return fallbackFactory();
+  } catch (_error) {
+    return undefined;
+  }
 }
 
 function normalizeNodeVersion(value) {
@@ -36,8 +41,8 @@ function getRuntimeMeta(runtime = process) {
 }
 
 function buildUptimeMessage(runtime = process) {
-  const uptimeSeconds = safeRuntimeCall(runtime, 'uptime', process.uptime());
-  const memoryUsage = safeRuntimeCall(runtime, 'memoryUsage', process.memoryUsage());
+  const uptimeSeconds = safeRuntimeCall(runtime, 'uptime', () => process.uptime());
+  const memoryUsage = safeRuntimeCall(runtime, 'memoryUsage', () => process.memoryUsage());
 
   const uptimeText = formatDuration(uptimeSeconds);
   const rssText = formatBytes(memoryUsage?.rss);
