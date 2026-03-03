@@ -33,6 +33,7 @@ assert.strictEqual(cmd.getInteractionRef({ id: '  abc-123_456  ' }), '23_456');
 assert.strictEqual(cmd.getInteractionRef({ id: '!!!' }), 'n/a');
 assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
 assert.strictEqual(cmd.getScopeLabel({ guildId: '123' }), 'guild');
+assert.strictEqual(cmd.getScopeLabel({ guildId: '   ' }), 'dm');
 assert.strictEqual(cmd.getScopeLabel({}), 'dm');
 const segments = cmd.buildPingSegments(
   { id: 'abc123456789', createdTimestamp: Date.now() - 100 },

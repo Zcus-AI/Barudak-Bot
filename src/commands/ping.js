@@ -92,7 +92,8 @@ function getInteractionRef(interaction) {
 }
 
 function getScopeLabel(interaction) {
-  if (interaction?.guildId) return 'guild';
+  const guildId = String(interaction?.guildId || '').trim();
+  if (guildId) return 'guild';
   return 'dm';
 }
 
