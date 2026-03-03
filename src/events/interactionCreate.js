@@ -13,7 +13,7 @@ module.exports = {
         return;
       }
 
-      const cooldownMs = command.cooldownMs || 0;
+      const cooldownMs = client.cooldowns.normalizeCooldownMs(command.cooldownMs);
       if (cooldownMs > 0) {
         const key = `${interaction.commandName}:${interaction.user.id}`;
         const check = client.cooldowns.check(key, cooldownMs);

@@ -149,3 +149,18 @@ Tanggal: 2026-03-03T02:31:43.811Z
 Jenis Perubahan: Refactor Improvement
 Deskripsi: Tidak ada task baru pada katalog saat ini.
 Status: Completed
+
+[ITERATION #12]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Cooldown normalization & stale-entry prevention
+File Dibuat:
+- (none)
+File Diubah:
+- src/utils/cooldown.js
+- src/events/interactionCreate.js
+- tests/cooldown.test.js
+- dev_log.md
+Deskripsi: Refactor CooldownManager dengan normalisasi key/cooldown yang lebih ketat, dukungan timestamp injeksi untuk test deterministik, dan pencegahan entry map stale saat cooldown <= 0. Event interaction sekarang memakai normalisasi cooldown terpusat agar lebih konsisten.
+Status Runtime: Lolos syntax check + test (cooldown & uptime)
+Next Plan: Tambah unit test untuk interaction error-path (reply vs followUp) tanpa mengubah behavior command existing.
