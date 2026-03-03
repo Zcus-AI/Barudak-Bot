@@ -504,3 +504,16 @@ File Diubah:
 Deskripsi: Menambahkan validasi/normalisasi pada `formatRuntimeInfo()` agar nilai `platform` yang kosong/whitespace tidak menghasilkan output runtime yang buruk. Formatter kini fallback aman ke `process.platform`.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan validasi serupa untuk formatter lain bila menerima input eksternal tidak terkontrol.
+
+[ITERATION #38]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Safe directory reader untuk loader command/event
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan helper `safeReadJsFiles()` dengan try/catch agar kegagalan baca direktori command/event (mis. path hilang/permission issue) tidak membuat bootstrap langsung crash. Loader kini fallback ke array kosong dan mencatat error yang jelas.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan test terisolasi untuk helper bootstrap agar jalur filesystem error bisa diverifikasi otomatis.

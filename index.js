@@ -26,9 +26,18 @@ function safeRequireModule(modulePath, label) {
   }
 }
 
+function safeReadJsFiles(dirPath, label) {
+  try {
+    return fs.readdirSync(dirPath).filter((f) => f.endsWith('.js'));
+  } catch (error) {
+    logger.error(`Gagal membaca direktori ${label}`, error);
+    return [];
+  }
+}
+
 function loadCommands(client) {
   const commandsPath = path.join(__dirname, 'src', 'commands');
-  const files = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js'));
+  const files = safeReadJsFiles(commandsPath, 'commands');
   const payload = [];
   let loaded = 0;
   let skipped = 0;
@@ -69,7 +78,7 @@ function loadCommands(client) {
 
 function loadEvents(client) {
   const eventsPath = path.join(__dirname, 'src', 'events');
-  const files = fs.readdirSync(eventsPath).filter((f) => f.endsWith('.js'));
+  const files = safeReadJsFiles(eventsPath, 'events');
   let loaded = 0;
   let skipped = 0;
 
