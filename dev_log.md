@@ -475,3 +475,18 @@ File Diubah:
 Deskripsi: Menambahkan baris runtime pada output command /uptime (platform + PID proses) agar diagnosa instance bot lebih cepat saat menjalankan beberapa proses. Perubahan tetap backward-compatible dan mempertahankan output uptime + RAM sebelumnya.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menambahkan opsi detail opsional pada /uptime untuk mode ringkas vs lengkap.
+
+[ITERATION #36]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Sentralisasi formatter runtime info ke util metrics
+File Dibuat:
+- (none)
+File Diubah:
+- src/utils/metrics-format.js
+- src/commands/uptime.js
+- tests/metrics-format.test.js
+- dev_log.md
+Deskripsi: Mengekstrak format runtime host (`platform | pid`) menjadi helper `formatRuntimeInfo()` di util metrics, lalu /uptime memakai helper tersebut. Ini merapikan tanggung jawab formatting dan memudahkan reuse lintas command.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan memindahkan threshold slow-command ke config/env agar mudah dituning per environment.

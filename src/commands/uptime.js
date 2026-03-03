@@ -1,4 +1,4 @@
-const { formatDuration, formatBytes } = require('../utils/metrics-format');
+const { formatDuration, formatBytes, formatRuntimeInfo } = require('../utils/metrics-format');
 
 module.exports = {
   data: {
@@ -11,7 +11,7 @@ module.exports = {
   async execute(interaction) {
     const uptimeText = formatDuration(process.uptime());
     const rssText = formatBytes(process.memoryUsage().rss);
-    const runtimeText = `${process.platform} | pid:${process.pid}`;
+    const runtimeText = formatRuntimeInfo();
 
     await interaction.reply({
       content: `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}`,
