@@ -231,3 +231,16 @@ File Diubah:
 Deskripsi: Menambahkan fitur kecil pada /uptime agar menampilkan 2 metrik sekaligus: durasi uptime yang lebih human-readable (mendukung hari) dan penggunaan RAM proses (RSS). Ditambah helper `formatDuration` + `formatBytes` serta test unit untuk formatter dan payload reply command.
 Status Runtime: Lolos syntax check + test (uptime, cooldown, interaction-create)
 Next Plan: Tambah opsi detail ringan pada /uptime (mis. pid/platform) bila diperlukan tanpa mengubah UX utama.
+
+[ITERATION #18]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Ekstraksi helper cooldown & error response pada interaction handler
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Refactor `interactionCreate` dengan mengekstrak helper `getCooldownAdapters` dan `sendCommandExecutionError`, serta konstanta pesan error command. Tujuan: mengurangi duplikasi logika, membuat alur utama lebih ringkas, dan mempermudah maintenance tanpa mengubah behavior existing.
+Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
+Next Plan: Rapikan unit test interaction agar reusable helper assertion bisa dipakai lintasan skenario lain.
