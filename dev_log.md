@@ -217,3 +217,17 @@ File Diubah:
 Deskripsi: Menambahkan logging kontekstual pada event interaction: warning saat command tidak ditemukan/handler invalid dengan nama command eksplisit, serta info log saat request diblok cooldown (menyertakan command, user id, dan retry seconds). Tujuannya mempercepat debugging produksi tanpa mengubah perilaku command.
 Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
 Next Plan: Tambah logging ringkas pada command execute success/failure latency untuk profiling ringan.
+
+[ITERATION #17]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Upgrade command /uptime dengan info RAM proses
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan fitur kecil pada /uptime agar menampilkan 2 metrik sekaligus: durasi uptime yang lebih human-readable (mendukung hari) dan penggunaan RAM proses (RSS). Ditambah helper `formatDuration` + `formatBytes` serta test unit untuk formatter dan payload reply command.
+Status Runtime: Lolos syntax check + test (uptime, cooldown, interaction-create)
+Next Plan: Tambah opsi detail ringan pada /uptime (mis. pid/platform) bila diperlukan tanpa mengubah UX utama.
