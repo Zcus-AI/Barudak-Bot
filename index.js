@@ -159,14 +159,24 @@ async function registerCommands(commandData) {
     return false;
   }
 
+  const sanitized = commandData.filter((cmd) => cmd && typeof cmd === 'object' && cmd.name);
+  const dropped = commandData.length - sanitized.length;
+  if (dropped > 0) {
+    logger.warn(`Registrasi slash command: ${dropped} payload invalid dilewati sebelum kirim ke Discord API`);
+  }
+  if (sanitized.length === 0) {
+    logger.warn('Lewati registrasi slash command karena seluruh payload command invalid');
+    return false;
+  }
+
   const rest = new REST({ version: '10' }).setToken(config.token);
   try {
     if (config.guildId) {
-      await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commandData });
-      logger.info(`Slash command terdaftar di guild (dev mode). total=${commandData.length}`);
+      await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: sanitized });
+      logger.info(`Slash command terdaftar di guild (dev mode). total=${sanitized.length}`);
     } else {
-      await rest.put(Routes.applicationCommands(config.clientId), { body: commandData });
-      logger.info(`Slash command terdaftar secara global. total=${commandData.length}`);
+      await rest.put(Routes.applicationCommands(config.clientId), { body: sanitized });
+      logger.info(`Slash command terdaftar secara global. total=${sanitized.length}`);
     }
     return true;
   } catch (error) {
