@@ -1,6 +1,7 @@
 const logger = require('../utils/logger');
 
 const COMMAND_EXECUTION_ERROR_MESSAGE = 'Terjadi error saat mengeksekusi command.';
+const SLOW_COMMAND_THRESHOLD_MS = 1000;
 
 function isBenignInteractionResponseError(error) {
   const code = Number(error?.code || error?.rawError?.code || 0);
@@ -103,7 +104,11 @@ module.exports = {
       const startedAt = Date.now();
       await command.execute(interaction, client);
       const elapsedMs = Date.now() - startedAt;
-      logger.info(`Command /${commandName} selesai dalam ${elapsedMs}ms`);
+      if (elapsedMs >= SLOW_COMMAND_THRESHOLD_MS) {
+        logger.warn(`Command /${commandName} lambat: ${elapsedMs}ms (>=${SLOW_COMMAND_THRESHOLD_MS}ms)`);
+      } else {
+        logger.info(`Command /${commandName} selesai dalam ${elapsedMs}ms`);
+      }
     } catch (error) {
       logger.error(`Gagal jalankan /${commandName}`, error);
       await sendCommandExecutionError(interaction, commandName);

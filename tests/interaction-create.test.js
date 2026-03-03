@@ -242,6 +242,34 @@ async function testCooldownReplyBenignErrorDoesNotThrow() {
   await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
 }
 
+async function testSlowCommandTimingPathDoesNotThrow() {
+  const originalNow = Date.now;
+  const mockTimes = [1000, 2505];
+  Date.now = () => (mockTimes.length > 0 ? mockTimes.shift() : 2505);
+
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-9' },
+    replied: false,
+    deferred: false,
+    isChatInputCommand: () => true,
+    reply: async () => {}
+  };
+
+  const client = {
+    commands: new Map([
+      ['ping', { execute: async () => {} }]
+    ]),
+    cooldowns: {}
+  };
+
+  try {
+    await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
+  } finally {
+    Date.now = originalNow;
+  }
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
@@ -251,5 +279,6 @@ async function testCooldownReplyBenignErrorDoesNotThrow() {
   await testInvalidCommandNameIsIgnoredSafely();
   await testMissingCommandRegistryIsIgnoredSafely();
   await testCooldownReplyBenignErrorDoesNotThrow();
+  await testSlowCommandTimingPathDoesNotThrow();
   console.log('interaction-create.test.js passed');
 })();

@@ -447,3 +447,17 @@ File Diubah:
 Deskripsi: Menambahkan test eksplisit untuk `normalizeNow()` agar timestamp valid tetap dipertahankan dan input negatif fallback ke waktu saat ini. Ini melengkapi coverage validasi waktu yang sebelumnya hanya teruji via `check()`.
 Status Runtime: Lolos seluruh test utama (cooldown, interaction-create, uptime, ping, metrics-format).
 Next Plan: Tambah test startup loader terisolasi agar skenario duplikasi nama command teruji otomatis.
+
+[ITERATION #34]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Warning log untuk command interaction yang lambat
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan threshold logging pada eksekusi command interaction: command dengan durasi >=1000ms kini dilog sebagai warning (`lambat`), sementara command cepat tetap info. Ditambah test untuk memastikan jalur timing lambat berjalan aman tanpa throw.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menjadikan threshold lambat configurable via environment untuk tuning per deployment.
