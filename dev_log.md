@@ -905,3 +905,16 @@ File Diubah:
 Deskripsi: Menambahkan helper `normalizePingMs()` agar nilai ping null/undefined/kosong/invalid/negatif tidak salah diklasifikasikan sebagai koneksi bagus. `getLatencyBadge()` kini selalu memproses nilai ping yang sudah disanitasi sehingga hasil badge lebih akurat.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan pemakaian helper normalisasi yang sama untuk metrik latency lain agar konsisten lintas command.
+
+[ITERATION #68]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Guard unhandled rejection pada event listener Discord
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Memperkuat loader event dengan wrapper handler berbasis `Promise.resolve(...).catch(...)` agar error async dari `event.execute()` tidak menjadi unhandled rejection dan tidak mengganggu event loop utama. Error event kini tercatat dengan konteks nama event + file sumber.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan test terisolasi untuk wrapper event handler jika helper loader diekstrak agar coverage jalur async error lebih eksplisit.

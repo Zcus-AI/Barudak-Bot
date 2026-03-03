@@ -121,10 +121,16 @@ function loadEvents(client) {
       continue;
     }
 
+    const handler = (...args) => {
+      Promise.resolve(event.execute(...args, client)).catch((error) => {
+        logger.error(`Event handler gagal: ${event.name} (${file})`, error);
+      });
+    };
+
     if (event.once) {
-      client.once(event.name, (...args) => event.execute(...args, client));
+      client.once(event.name, handler);
     } else {
-      client.on(event.name, (...args) => event.execute(...args, client));
+      client.on(event.name, handler);
     }
     loadedNames.push(`${event.name}${event.once ? '(once)' : ''}`);
     loaded += 1;
