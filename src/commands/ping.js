@@ -93,7 +93,7 @@ function getPingMetrics(interaction, client) {
 
 function getInteractionRef(interaction) {
   const raw = String(interaction?.id || '').trim();
-  if (!raw) return 'n/a';
+  if (!raw || raw.length > 128) return 'n/a';
   const normalized = raw.replace(/[^a-zA-Z0-9_-]/g, '');
   if (!normalized) return 'n/a';
   return normalized.slice(-6);

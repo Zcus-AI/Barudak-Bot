@@ -30,6 +30,7 @@ assert.strictEqual(cmd.getLatencyTier(500), 'poor');
 assert.strictEqual(cmd.getLatencyTier(null), 'unknown');
 assert.strictEqual(cmd.getInteractionRef({ id: '1234567890' }), '567890');
 assert.strictEqual(cmd.getInteractionRef({ id: '  abc-123_456  ' }), '23_456');
+assert.strictEqual(cmd.getInteractionRef({ id: 'x'.repeat(200) }), 'n/a');
 assert.strictEqual(cmd.getInteractionRef({ id: '!!!' }), 'n/a');
 assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
 assert.strictEqual(cmd.getScopeLabel({ guildId: '123' }), 'guild');
