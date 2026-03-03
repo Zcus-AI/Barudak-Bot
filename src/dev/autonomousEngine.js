@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFile } = require('node:child_process');
+const { execFile, spawnSync } = require('node:child_process');
 const { promisify } = require('node:util');
 const logger = require('../utils/logger');
 
@@ -40,6 +40,26 @@ class AutonomousEngine {
 
   async git(args) {
     return execFileAsync('git', args, { cwd: process.cwd() });
+  }
+
+  runGitCommand(args, label) {
+    logger.info(`Running git command: git ${args.join(' ')}`);
+    const result = spawnSync('git', args, {
+      cwd: process.cwd(),
+      encoding: 'utf8'
+    });
+
+    const stdout = (result.stdout || '').trim();
+    const stderr = (result.stderr || '').trim();
+
+    if (stdout) logger.info(`${label} stdout: ${stdout}`);
+    if (stderr) logger.warn(`${label} stderr: ${stderr}`);
+
+    if (result.status !== 0) {
+      return { ok: false, stdout, stderr, status: result.status };
+    }
+
+    return { ok: true, stdout, stderr, status: result.status };
   }
 
   fileExists(relPath) {
@@ -145,8 +165,18 @@ console.log('uptime-command.test.js passed');
   }
 
   async getMeaningfulChangedFiles() {
-    const { stdout } = await this.git(['status', '--porcelain']);
-    const files = this.parseChangedFiles(stdout);
+    logger.info('Running: git status --porcelain');
+    const status = this.runGitCommand(['status', '--porcelain'], 'git status');
+    const raw = status.stdout || '';
+    logger.info(`git status raw output:\n${raw || '(empty)'}`);
+
+    if (!raw.trim()) {
+      logger.info('Git status empty');
+      return [];
+    }
+
+    logger.info('Git changes detected');
+    const files = this.parseChangedFiles(raw);
     return files.filter((f) => !this.ignoredFiles.has(f));
   }
 
@@ -186,17 +216,40 @@ console.log('uptime-command.test.js passed');
 
       await this.validateBeforeCommit(meaningfulChanges);
 
-      await this.git(['add', '.']);
-      await this.git(['commit', '-m', 'auto: iteration update']);
-      const { stdout: commitHash } = await this.git(['rev-parse', '--short', 'HEAD']);
-      this.lastAutoCommitHash = commitHash.trim();
+      const addRes = this.runGitCommand(['add', '.'], 'git add');
+      if (!addRes.ok) {
+        logger.error(`Git add failed: ${addRes.stderr || addRes.stdout || 'unknown error'}`);
+        return false;
+      }
+      logger.info('Git add success');
+
+      const commitRes = this.runGitCommand(['commit', '-m', 'auto: iteration update'], 'git commit');
+      if (!commitRes.ok) {
+        const commitError = `${commitRes.stderr || commitRes.stdout || 'unknown error'}`;
+        if (commitError.toLowerCase().includes('nothing to commit')) {
+          logger.warn('Git commit failed: nothing to commit');
+        } else {
+          logger.error(`Git commit failed: ${commitError}`);
+        }
+        return false;
+      }
       logger.info('Git commit success');
 
-      try {
-        await this.git(['push']);
+      const rev = this.runGitCommand(['rev-parse', '--short', 'HEAD'], 'git rev-parse');
+      if (rev.ok) this.lastAutoCommitHash = (rev.stdout || '').trim();
+
+      let pushRes = this.runGitCommand(['push'], 'git push');
+      if (!pushRes.ok) {
+        const branchRes = this.runGitCommand(['rev-parse', '--abbrev-ref', 'HEAD'], 'git current-branch');
+        const branch = branchRes.ok && branchRes.stdout ? branchRes.stdout.trim() : 'main';
+        logger.warn(`Git push failed, trying set-upstream for branch ${branch}`);
+        pushRes = this.runGitCommand(['push', '--set-upstream', 'origin', branch], 'git push set-upstream');
+      }
+
+      if (!pushRes.ok) {
+        logger.error(`Git push failed: ${pushRes.stderr || pushRes.stdout || 'unknown error'}`);
+      } else {
         logger.info('Git push success');
-      } catch (pushError) {
-        logger.error('Git push failed', pushError.stderr || pushError.message || pushError);
       }
 
       return true;
