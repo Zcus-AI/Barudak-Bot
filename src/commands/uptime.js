@@ -41,13 +41,19 @@ function getRuntimeMeta(runtime = process) {
   };
 }
 
+function getMemoryTexts(memoryUsage) {
+  return {
+    rssText: formatBytes(memoryUsage?.rss),
+    heapUsedText: formatBytes(memoryUsage?.heapUsed)
+  };
+}
+
 function buildUptimeMessage(runtime = process) {
   const uptimeSeconds = safeRuntimeCall(runtime, 'uptime', () => process.uptime());
   const memoryUsage = safeRuntimeCall(runtime, 'memoryUsage', () => process.memoryUsage());
 
   const uptimeText = formatDuration(uptimeSeconds);
-  const rssText = formatBytes(memoryUsage?.rss);
-  const heapUsedText = formatBytes(memoryUsage?.heapUsed);
+  const { rssText, heapUsedText } = getMemoryTexts(memoryUsage);
   const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
   const { runtimeText, nodeVersion, arch } = getRuntimeMeta(runtime);
 

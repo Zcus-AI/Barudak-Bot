@@ -1709,3 +1709,22 @@ File Diubah:
 Deskripsi: Menambahkan baris `📦 RAM (HeapUsed)` pada command /uptime untuk memberi visibilitas penggunaan heap process selain RSS. Ini membantu diagnosis memory pressure Node.js dengan konteks yang lebih lengkap.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan penambahan indikasi persentase heap terhadap total limit jika ingin observability memory lebih detail.
+
+[ITERATION AUTO #90]
+Tanggal: 2026-03-03T07:16:36.504Z
+Jenis Perubahan: Feature Improvement
+Deskripsi: Feature Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #91]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Ekstraksi formatter memori pada builder /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- dev_log.md
+Deskripsi: Merapikan `buildUptimeMessage()` dengan mengekstrak formatting metrik memori ke helper `getMemoryTexts()`. Refactor ini mengurangi detail implementasi di fungsi utama dan mempermudah maintenance bila field memori bertambah.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan ekstraksi helper komposisi line output agar fungsi builder makin modular.
