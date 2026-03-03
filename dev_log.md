@@ -731,3 +731,16 @@ File Diubah:
 Deskripsi: Menambahkan helper `commandLabel()` dan menerapkannya secara konsisten di jalur log command/cooldown/error. Refactor ini mengurangi duplikasi string format `/command` dan memudahkan perubahan format log di satu titik.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan ekstraksi helper log interaction ke util terpisah jika jumlah event bertambah.
+
+[ITERATION #55]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi defensif pada helper command label log
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menambahkan normalisasi input di `commandLabel()` agar nilai commandName kosong/whitespace/non-string otomatis fallback ke `unknown`. Ini mencegah format log command menjadi tidak valid saat input anomali.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah coverage test khusus helper log formatting jika helper diekstrak ke util terpisah.

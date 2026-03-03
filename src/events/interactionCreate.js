@@ -4,7 +4,9 @@ const COMMAND_EXECUTION_ERROR_MESSAGE = 'Terjadi error saat mengeksekusi command
 const SLOW_COMMAND_THRESHOLD_MS = 1000;
 
 function commandLabel(commandName) {
-  return `/${commandName}`;
+  const normalized =
+    typeof commandName === 'string' && commandName.trim() ? commandName.trim() : 'unknown';
+  return `/${normalized}`;
 }
 
 function isBenignInteractionResponseError(error) {
