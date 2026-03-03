@@ -37,6 +37,21 @@ async function sendCommandExecutionError(interaction, commandName) {
   }
 }
 
+async function sendCooldownReply(interaction, commandName, retrySeconds) {
+  try {
+    await interaction.reply({
+      content: `⏳ Tunggu ${retrySeconds} detik sebelum memakai command ini lagi.`,
+      ephemeral: true
+    });
+  } catch (error) {
+    if (isBenignInteractionResponseError(error)) {
+      logger.info(`Skip cooldown response /${commandName} (interaction sudah tidak valid)`);
+    } else {
+      logger.warn(`Gagal mengirim cooldown response /${commandName}`, error);
+    }
+  }
+}
+
 module.exports = {
   name: 'interactionCreate',
   async execute(interaction, client) {
@@ -78,10 +93,7 @@ module.exports = {
             const retry = Math.max(1, Math.ceil(check.retryAfterMs / 1000));
             logger.info(`Cooldown block /${interaction.commandName} user:${userId} retry_after:${retry}s`);
             if (!interaction.replied && !interaction.deferred) {
-              await interaction.reply({
-                content: `⏳ Tunggu ${retry} detik sebelum memakai command ini lagi.`,
-                ephemeral: true
-              });
+              await sendCooldownReply(interaction, interaction.commandName, retry);
             }
             return;
           }

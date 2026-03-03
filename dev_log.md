@@ -420,3 +420,17 @@ File Diubah:
 Deskripsi: Menambahkan validasi tambahan pada `loadCommands()` untuk menormalisasi nama command, menolak nama kosong setelah trim, dan mencegah command duplikat agar tidak saling overwrite diam-diam di registry. Loader kini skip command invalid/duplikat dengan warning yang jelas.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah test bootstrap terisolasi agar skenario duplicate command name terverifikasi otomatis.
+
+[ITERATION #32]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening jalur response cooldown interaction
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan helper `sendCooldownReply()` dengan penanganan error benign (Unknown Interaction/Already Acknowledged) agar kegagalan reply cooldown tidak mengeskalasi error command. Ditambah unit test untuk memastikan kasus benign pada cooldown reply tidak melempar exception.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan threshold warning untuk command execution duration agar kasus lambat lebih mudah terdeteksi.

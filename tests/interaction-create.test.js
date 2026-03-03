@@ -215,6 +215,33 @@ async function testMissingCommandRegistryIsIgnoredSafely() {
   await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
 }
 
+async function testCooldownReplyBenignErrorDoesNotThrow() {
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-8' },
+    replied: false,
+    deferred: false,
+    isChatInputCommand: () => true,
+    reply: async () => {
+      const err = new Error('Unknown interaction');
+      err.code = 10062;
+      throw err;
+    }
+  };
+
+  const client = {
+    commands: new Map([
+      ['ping', { cooldownMs: 1000, execute: async () => {} }]
+    ]),
+    cooldowns: {
+      normalizeCooldownMs: () => 1000,
+      check: () => ({ allowed: false, retryAfterMs: 500 })
+    }
+  };
+
+  await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
@@ -223,5 +250,6 @@ async function testMissingCommandRegistryIsIgnoredSafely() {
   await testBenignAlreadyAcknowledgedFollowUpErrorDoesNotThrow();
   await testInvalidCommandNameIsIgnoredSafely();
   await testMissingCommandRegistryIsIgnoredSafely();
+  await testCooldownReplyBenignErrorDoesNotThrow();
   console.log('interaction-create.test.js passed');
 })();
