@@ -40,6 +40,14 @@ function getLatencyBadge(wsPingMs) {
   return LATENCY_BADGES.bad;
 }
 
+function getLatencyTier(wsPingMs) {
+  const badge = getLatencyBadge(wsPingMs);
+  if (badge === LATENCY_BADGES.good) return 'good';
+  if (badge === LATENCY_BADGES.medium) return 'medium';
+  if (badge === LATENCY_BADGES.bad) return 'poor';
+  return 'unknown';
+}
+
 function getIsoNow() {
   return new Date().toISOString();
 }
@@ -63,17 +71,19 @@ function normalizeIsoTimestamp(value) {
 function getPingMetrics(interaction, client) {
   const latencyMs = getInteractionLatencyMs(interaction);
   const wsPingMs = getWebsocketPingMs(client);
+  const badge = getLatencyBadge(wsPingMs);
   return {
     latencyMs,
     wsPingMs,
-    badge: getLatencyBadge(wsPingMs)
+    badge,
+    tier: getLatencyTier(wsPingMs)
   };
 }
 
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
   const metrics = getPingMetrics(interaction, client);
   const safeIsoNow = normalizeIsoTimestamp(nowIso);
-  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | At: ${safeIsoNow}`;
+  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | Tier: ${metrics.tier} | At: ${safeIsoNow}`;
 }
 
 module.exports = {
@@ -86,6 +96,7 @@ module.exports = {
   getWebsocketPingMs,
   normalizePingMs,
   getLatencyBadge,
+  getLatencyTier,
   getPingMetrics,
   normalizeIsoTimestamp,
   buildPingMessage,

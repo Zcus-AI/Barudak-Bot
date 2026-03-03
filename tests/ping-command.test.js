@@ -23,14 +23,20 @@ assert.strictEqual(cmd.getLatencyBadge(251), '🔴');
 assert.strictEqual(cmd.getLatencyBadge(500), '🔴');
 assert.strictEqual(cmd.getLatencyBadge(null), '⚪');
 assert.strictEqual(cmd.getLatencyBadge(-10), '⚪');
+assert.strictEqual(cmd.getLatencyTier(50), 'good');
+assert.strictEqual(cmd.getLatencyTier(180), 'medium');
+assert.strictEqual(cmd.getLatencyTier(500), 'poor');
+assert.strictEqual(cmd.getLatencyTier(null), 'unknown');
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
 assert.strictEqual(metrics.badge, '🟡');
+assert.strictEqual(metrics.tier, 'medium');
 const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
 assert.strictEqual(metricsInvalid.latencyMs, null);
 assert.strictEqual(metricsInvalid.wsPingMs, null);
 assert.strictEqual(metricsInvalid.badge, '⚪');
+assert.strictEqual(metricsInvalid.tier, 'unknown');
 assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
   '2026-01-01T00:00:00.000Z'
@@ -50,7 +56,7 @@ assert.ok(
 assert.ok(
   cmd
     .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
-    .includes('Latency: n/a | WS: n/a | At: 2026-01-01T00:00:00.000Z'),
+    .includes('Latency: n/a | WS: n/a | Tier: unknown | At: 2026-01-01T00:00:00.000Z'),
   'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
@@ -71,6 +77,7 @@ assert.ok(
   assert.ok(/🏓 Pong! (🟢|🟡|🔴|⚪) Latency:/.test(payload.content), 'ping reply should include latency badge');
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
+  assert.ok(payload.content.includes('Tier: good'), 'ping reply should include latency tier label');
   assert.ok(/\| At: .*Z$/.test(payload.content), 'ping reply should include ISO timestamp');
 
   let invalidPayload = null;
