@@ -393,3 +393,17 @@ File Diubah:
 Deskripsi: Menambahkan metrik baru pada command /ping: websocket ping (`client.ws.ping`) dengan fallback `n/a` bila tidak tersedia. Output kini menampilkan latency interaction dan WS ping sekaligus agar diagnosa koneksi lebih informatif.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan opsi detail opsional di /ping (mis. timestamp server) tanpa mengganggu output ringkas default.
+
+[ITERATION #30]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Ekstraksi builder pesan command /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Merapikan command /ping dengan mengekstrak `formatMs()` dan `buildPingMessage()` agar formatting pesan terpusat dan lebih mudah diuji. Behavior output tetap sama, namun struktur kode lebih modular dan test menambah coverage untuk builder message.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan util formatter umum untuk output command singkat agar konsisten lintas command.

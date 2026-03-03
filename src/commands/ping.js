@@ -8,6 +8,16 @@ function getWebsocketPingMs(client) {
   return Math.floor(wsPing);
 }
 
+function formatMs(value) {
+  return value === null ? 'n/a' : `${value}ms`;
+}
+
+function buildPingMessage(interaction, client) {
+  const latencyMs = getInteractionLatencyMs(interaction);
+  const wsPingMs = getWebsocketPingMs(client);
+  return `🏓 Pong! Latency: ${formatMs(latencyMs)} | WS: ${formatMs(wsPingMs)}`;
+}
+
 module.exports = {
   data: {
     name: 'ping',
@@ -16,15 +26,10 @@ module.exports = {
   cooldownMs: 3000,
   getLatencyMs: getInteractionLatencyMs,
   getWebsocketPingMs,
+  buildPingMessage,
   async execute(interaction, client) {
-    const latencyMs = getInteractionLatencyMs(interaction);
-    const wsPingMs = getWebsocketPingMs(client);
-
-    const latencyText = latencyMs === null ? 'n/a' : `${latencyMs}ms`;
-    const wsPingText = wsPingMs === null ? 'n/a' : `${wsPingMs}ms`;
-
     await interaction.reply({
-      content: `🏓 Pong! Latency: ${latencyText} | WS: ${wsPingText}`,
+      content: buildPingMessage(interaction, client),
       ephemeral: true
     });
   }

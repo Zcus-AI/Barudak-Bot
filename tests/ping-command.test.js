@@ -7,6 +7,14 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: Date.now() - 250 }) >= 0
 assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 42.9 } }), 42);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 'invalid' } }), null);
+assert.ok(
+  cmd.buildPingMessage({ createdTimestamp: Date.now() - 25 }, { ws: { ping: 10 } }).includes('WS: 10ms'),
+  'buildPingMessage should include websocket ping in ms format'
+);
+assert.ok(
+  cmd.buildPingMessage({ createdTimestamp: 'invalid' }, {}).includes('Latency: n/a | WS: n/a'),
+  'buildPingMessage should fallback for missing latency metrics'
+);
 
 (async () => {
   let payload = null;
