@@ -35,6 +35,14 @@ assert.ok(
   'buildUptimeMessage should fallback safely when uptime/memoryUsage methods are missing'
 );
 assert.ok(
+  cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes(`🧩 Node: ${process.version}`),
+  'buildUptimeMessage should fallback to process.version when runtime.version is missing'
+);
+assert.ok(
+  cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes(`🏗️ Arch: ${process.arch}`),
+  'buildUptimeMessage should fallback to process.arch when runtime.arch is missing'
+);
+assert.ok(
   cmd
     .buildUptimeMessage({
       uptime: () => {

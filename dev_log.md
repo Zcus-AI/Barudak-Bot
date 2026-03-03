@@ -758,3 +758,16 @@ File Diubah:
 Deskripsi: Menambahkan helper `safeRuntimeCall()` pada builder /uptime untuk menangani kasus `uptime()` atau `memoryUsage()` dari runtime injection melempar error. Command kini otomatis fallback ke nilai proses aktual, mencegah crash pada skenario dependency injection bermasalah.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan logging debug opsional saat fallback `safeRuntimeCall()` terpicu untuk memudahkan diagnosis test/runtime injection.
+
+[ITERATION #57]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Tambahan test fallback versi Node & arsitektur pada /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan unit test untuk memastikan `buildUptimeMessage()` fallback ke `process.version` dan `process.arch` ketika runtime injection tidak menyertakan `version`/`arch`. Ini memperkuat jaminan output metadata runtime tetap lengkap.
+Status Runtime: Lolos seluruh test utama (uptime, cooldown, interaction-create, ping, metrics-format).
+Next Plan: Tambah test untuk fallback `formatRuntimeInfo` saat pid/platform anomali dari runtime injection kombinasi.
