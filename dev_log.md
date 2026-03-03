@@ -718,3 +718,16 @@ File Diubah:
 Deskripsi: Menambahkan informasi arsitektur proses (`process.arch`) pada output /uptime melalui baris baru `🏗️ Arch`. Fitur ini membantu diagnosis environment ketika bot berjalan di host dengan arsitektur berbeda.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan opsi output compact agar detail runtime bisa dipadatkan untuk channel dengan batas tampilan ketat.
+
+[ITERATION #54]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Helper format label command untuk logging interaction
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menambahkan helper `commandLabel()` dan menerapkannya secara konsisten di jalur log command/cooldown/error. Refactor ini mengurangi duplikasi string format `/command` dan memudahkan perubahan format log di satu titik.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan ekstraksi helper log interaction ke util terpisah jika jumlah event bertambah.
