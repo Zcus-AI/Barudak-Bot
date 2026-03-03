@@ -11,9 +11,10 @@ module.exports = {
   async execute(interaction) {
     const uptimeText = formatDuration(process.uptime());
     const rssText = formatBytes(process.memoryUsage().rss);
+    const runtimeText = `${process.platform} | pid:${process.pid}`;
 
     await interaction.reply({
-      content: `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}`,
+      content: `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}`,
       ephemeral: true
     });
   }

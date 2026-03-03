@@ -461,3 +461,17 @@ File Diubah:
 Deskripsi: Menambahkan threshold logging pada eksekusi command interaction: command dengan durasi >=1000ms kini dilog sebagai warning (`lambat`), sementara command cepat tetap info. Ditambah test untuk memastikan jalur timing lambat berjalan aman tanpa throw.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menjadikan threshold lambat configurable via environment untuk tuning per deployment.
+
+[ITERATION #35]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /uptime menampilkan info runtime host
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan baris runtime pada output command /uptime (platform + PID proses) agar diagnosa instance bot lebih cepat saat menjalankan beberapa proses. Perubahan tetap backward-compatible dan mempertahankan output uptime + RAM sebelumnya.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menambahkan opsi detail opsional pada /uptime untuk mode ringkas vs lengkap.
