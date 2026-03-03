@@ -339,3 +339,16 @@ File Diubah:
 Deskripsi: Menambahkan normalisasi `now` di CooldownManager agar input waktu invalid (NaN/undefined/negatif) tidak merusak perhitungan cooldown/pruning. Ditambah test untuk memastikan fallback waktu aman tetap mempertahankan behavior cooldown.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi ringan pada input key/cooldown untuk melaporkan pola misuse di log debug bila dibutuhkan.
+
+[ITERATION #26]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening registrasi slash command saat startup
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan guard pada `registerCommands()` untuk skip aman saat commandData kosong/invalid, serta try/catch agar kegagalan REST register command tidak menghentikan proses startup bot. Error tetap tercatat jelas di log dan fungsi mengembalikan status boolean.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan unit test ringan untuk helper bootstrap agar return status register dapat diverifikasi otomatis.

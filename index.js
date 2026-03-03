@@ -87,16 +87,27 @@ function loadEvents(client) {
 async function registerCommands(commandData) {
   if (!config.token || !config.clientId) {
     logger.warn('Lewati registrasi slash command (DISCORD_TOKEN/DISCORD_CLIENT_ID belum lengkap)');
-    return;
+    return false;
+  }
+
+  if (!Array.isArray(commandData) || commandData.length === 0) {
+    logger.warn('Lewati registrasi slash command karena tidak ada command valid yang dimuat');
+    return false;
   }
 
   const rest = new REST({ version: '10' }).setToken(config.token);
-  if (config.guildId) {
-    await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commandData });
-    logger.info('Slash command terdaftar di guild (dev mode).');
-  } else {
-    await rest.put(Routes.applicationCommands(config.clientId), { body: commandData });
-    logger.info('Slash command terdaftar secara global.');
+  try {
+    if (config.guildId) {
+      await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commandData });
+      logger.info('Slash command terdaftar di guild (dev mode).');
+    } else {
+      await rest.put(Routes.applicationCommands(config.clientId), { body: commandData });
+      logger.info('Slash command terdaftar secara global.');
+    }
+    return true;
+  } catch (error) {
+    logger.error('Registrasi slash command gagal, lanjut startup tanpa hentikan bot', error);
+    return false;
   }
 }
 
