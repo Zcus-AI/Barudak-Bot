@@ -8,6 +8,10 @@ module.exports = {
 
       const command = client.commands.get(interaction.commandName);
       if (!command) return;
+      if (typeof command.execute !== 'function') {
+        logger.warn('Invalid command handler format');
+        return;
+      }
 
       const cooldownMs = command.cooldownMs || 0;
       if (cooldownMs > 0) {
