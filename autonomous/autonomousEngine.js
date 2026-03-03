@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFile, spawnSync } = require('node:child_process');
 const { promisify } = require('node:util');
-const logger = require('../utils/logger');
+const logger = require('../src/utils/logger');
 
 const execFileAsync = promisify(execFile);
 
@@ -19,7 +19,7 @@ class AutonomousEngine {
     this.timer = null;
     this.iterationCount = 0;
     this.lastAutoCommitHash = null;
-    this.ignoredFiles = new Set(['src/dev/autonomous-metrics.json', 'dev_log.md', 'control.json']);
+    this.ignoredFiles = new Set(['autonomous/autonomous-metrics.json', 'dev_log.md', 'control.json']);
   }
 
   readControl() {
@@ -164,7 +164,7 @@ class AutonomousEngine {
 
     logger.info('Git changes detected');
     const files = this.parseChangedFiles(raw);
-    return files.filter((f) => !this.ignoredFiles.has(f));
+    return files.filter((f) => !this.ignoredFiles.has(f) && !f.startsWith('autonomous/'));
   }
 
   async validateBeforeCommit(changedFiles) {
@@ -200,6 +200,11 @@ class AutonomousEngine {
         await this.validateBeforeCommit(changedFiles);
       }
 
+      if (changedFiles.length === 0) {
+        logger.info('Tidak ada perubahan bot yang meaningful, skip commit/push.');
+        return false;
+      }
+
       const addRes = this.runGitCommand(['add', '-A'], 'git add -A');
       if (!addRes.ok) {
         logger.error(`Git add failed: ${addRes.stderr || addRes.stdout || 'unknown error'}`);
@@ -207,8 +212,8 @@ class AutonomousEngine {
       }
       logger.info('Git add success');
 
-      const commitMessage = `autonomous sync ${new Date().toISOString()}`;
-      const commitRes = this.runGitCommand(['commit', '--allow-empty', '-m', commitMessage], 'git commit --allow-empty');
+      const commitMessage = `bot update ${new Date().toISOString()}`;
+      const commitRes = this.runGitCommand(['commit', '-m', commitMessage], 'git commit');
       if (!commitRes.ok) {
         logger.error(`Git commit failed: ${commitRes.stderr || commitRes.stdout || 'unknown error'}`);
         return false;

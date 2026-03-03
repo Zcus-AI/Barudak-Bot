@@ -7,6 +7,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
+    "start:bot": "node index.js",
+    "start:autonomous": "node autonomous/index.js",
     "createbot": "npm run build && node dist/scripts/createbot.js",
     "batch:add": "npm run build && node dist/scripts/batch-add-bots.js",
     "listbot": "npm run build && node dist/scripts/list-bots.js --file tokens.json",

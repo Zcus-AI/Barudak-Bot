@@ -1,14 +1,16 @@
-# Barudak Bot (Autonomous Discord Bot)
+# Barudak Bot (Discord Bot)
 
 Struktur modular Discord bot berbasis `discord.js` dengan command loader, event loader, logging, dan cooldown system.
 
 ## Struktur
 
-- `index.js` - entrypoint utama bot
+- `index.js` - entrypoint utama bot Discord
 - `src/commands` - kumpulan slash command
 - `src/events` - event handler Discord
 - `src/utils` - utilitas (logger + cooldown)
 - `src/config` - konfigurasi environment
+- `autonomous/index.js` - entrypoint khusus sistem autonomous (terpisah dari bot)
+- `autonomous/autonomousEngine.js` - engine autonomous
 - `tests` - test sederhana
 - `control.json` - kontrol autonomous mode
 - `dev_log.md` - catatan iterasi pengembangan
@@ -25,9 +27,18 @@ DISCORD_GUILD_ID=optional_for_dev
 
 ## Menjalankan
 
+### Bot saja (default)
+
 ```bash
-npm install
 npm start
+# atau
+npm run start:bot
+```
+
+### Autonomous subsystem (opsional, runtime terpisah)
+
+```bash
+npm run start:autonomous
 ```
 
 ## Testing
