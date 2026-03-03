@@ -181,29 +181,22 @@ class AutonomousEngine {
 
   async runGitIntegration() {
     try {
-      const meaningfulChanges = await this.getMeaningfulChangedFiles();
-      if (meaningfulChanges.length === 0) {
-        logger.info('No meaningful project changes detected');
-        return false;
+      const changedFiles = await this.getMeaningfulChangedFiles();
+      if (changedFiles.length > 0) {
+        await this.validateBeforeCommit(changedFiles);
       }
 
-      await this.validateBeforeCommit(meaningfulChanges);
-
-      const addRes = this.runGitCommand(['add', '.'], 'git add');
+      const addRes = this.runGitCommand(['add', '-A'], 'git add -A');
       if (!addRes.ok) {
         logger.error(`Git add failed: ${addRes.stderr || addRes.stdout || 'unknown error'}`);
         return false;
       }
       logger.info('Git add success');
 
-      const commitRes = this.runGitCommand(['commit', '-m', 'auto: iteration update'], 'git commit');
+      const commitMessage = `autonomous sync ${new Date().toISOString()}`;
+      const commitRes = this.runGitCommand(['commit', '--allow-empty', '-m', commitMessage], 'git commit --allow-empty');
       if (!commitRes.ok) {
-        const commitError = `${commitRes.stderr || commitRes.stdout || 'unknown error'}`;
-        if (commitError.toLowerCase().includes('nothing to commit')) {
-          logger.warn('Git commit failed: nothing to commit');
-        } else {
-          logger.error(`Git commit failed: ${commitError}`);
-        }
+        logger.error(`Git commit failed: ${commitRes.stderr || commitRes.stdout || 'unknown error'}`);
         return false;
       }
       logger.info('Git commit success');
@@ -211,19 +204,12 @@ class AutonomousEngine {
       const rev = this.runGitCommand(['rev-parse', '--short', 'HEAD'], 'git rev-parse');
       if (rev.ok) this.lastAutoCommitHash = (rev.stdout || '').trim();
 
-      let pushRes = this.runGitCommand(['push'], 'git push');
-      if (!pushRes.ok) {
-        const branchRes = this.runGitCommand(['rev-parse', '--abbrev-ref', 'HEAD'], 'git current-branch');
-        const branch = branchRes.ok && branchRes.stdout ? branchRes.stdout.trim() : 'main';
-        logger.warn(`Git push failed, trying set-upstream for branch ${branch}`);
-        pushRes = this.runGitCommand(['push', '--set-upstream', 'origin', branch], 'git push set-upstream');
-      }
-
+      const pushRes = this.runGitCommand(['push', 'origin', 'main', '--force-with-lease'], 'git push origin main --force-with-lease');
       if (!pushRes.ok) {
         logger.error(`Git push failed: ${pushRes.stderr || pushRes.stdout || 'unknown error'}`);
-      } else {
-        logger.info('Git push success');
+        return false;
       }
+      logger.info('Git push success');
 
       return true;
     } catch (error) {
