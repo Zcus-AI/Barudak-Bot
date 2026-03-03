@@ -838,3 +838,16 @@ File Diubah:
 Deskripsi: Menambahkan `normalizeControlShape()` pada alur `readControl()` untuk menangani format `control.json` yang tidak valid (bukan object/array) atau `autonomous_mode` bukan boolean. Sistem kini fallback aman ke `autonomous_mode=false` dengan warning terarah tanpa menghentikan proses startup.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan test terisolasi untuk helper normalisasi control agar regresi validasi config dapat terdeteksi otomatis.
+
+[ITERATION #63]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Tambahan test sanitasi nilai uptime & RSS pada /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan unit test edge-case untuk `buildUptimeMessage()` agar memverifikasi nilai uptime negatif di-clamp menjadi `UptimeSec: 0` dan nilai RSS invalid disanitasi menjadi `0 B`. Ini memperkuat jaminan output tetap valid pada input runtime yang buruk.
+Status Runtime: Lolos seluruh test utama (uptime, cooldown, interaction-create, ping, metrics-format).
+Next Plan: Tambah test terisolasi helper control/config normalization saat memungkinkan export helper bootstrap.

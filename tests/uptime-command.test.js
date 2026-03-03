@@ -73,6 +73,28 @@ assert.ok(
     .includes('⏱️ Uptime:'),
   'buildUptimeMessage should fallback safely when runtime methods throw'
 );
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => -10,
+      memoryUsage: () => ({ rss: 'invalid' }),
+      platform: 'linux',
+      pid: 123
+    })
+    .includes('🧮 UptimeSec: 0'),
+  'buildUptimeMessage should clamp negative uptime seconds to 0'
+);
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => -10,
+      memoryUsage: () => ({ rss: 'invalid' }),
+      platform: 'linux',
+      pid: 123
+    })
+    .includes('🧠 RAM (RSS): 0 B'),
+  'buildUptimeMessage should sanitize invalid rss values'
+);
 
 (async () => {
   let payload = null;
