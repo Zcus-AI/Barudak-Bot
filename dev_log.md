@@ -191,3 +191,16 @@ File Diubah:
 Deskripsi: Menambahkan deteksi error response interaction yang bersifat benign (Unknown Interaction/Already Acknowledged) agar tidak diperlakukan sebagai warning keras. Handler kini menggunakan fallback `commandName` aman saat logging error, sehingga log tetap jelas walau metadata interaction tidak lengkap.
 Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
 Next Plan: Tambah guard error ringan pada command loader untuk file command yang throw saat require.
+
+[ITERATION #15]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Perluasan unit test jalur error interaction
+File Dibuat:
+- (none)
+File Diubah:
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan cakupan test untuk error path yang sebelumnya belum terverifikasi: (1) interaction deferred wajib memakai followUp saat command gagal, (2) followUp yang gagal dengan kode benign 40060 tidak melempar error ke caller. Ini menjaga behavior handler tetap stabil pada kondisi race/acknowledgement Discord API.
+Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
+Next Plan: Tambah test command loader untuk skenario command invalid format agar warning path tetap aman.

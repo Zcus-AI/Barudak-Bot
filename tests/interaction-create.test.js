@@ -103,9 +103,83 @@ async function testBenignUnknownInteractionErrorDoesNotThrow() {
   await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
 }
 
+async function testDeferredInteractionUsesFollowUpOnError() {
+  let followUpPayload = null;
+  let replyCalled = false;
+
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-4' },
+    replied: false,
+    deferred: true,
+    isChatInputCommand: () => true,
+    reply: async () => {
+      replyCalled = true;
+    },
+    followUp: async (payload) => {
+      followUpPayload = payload;
+    }
+  };
+
+  const client = {
+    commands: new Map([
+      [
+        'ping',
+        {
+          execute: async () => {
+            throw new Error('deferred-command-failure');
+          }
+        }
+      ]
+    ]),
+    cooldowns: {}
+  };
+
+  await interactionEvent.execute(interaction, client);
+  assert.strictEqual(replyCalled, false, 'Deferred interaction should not call reply on command error');
+  assert.ok(followUpPayload, 'Deferred interaction should call followUp on command error');
+  assert.strictEqual(followUpPayload.ephemeral, true, 'Error followUp should stay ephemeral');
+}
+
+async function testBenignAlreadyAcknowledgedFollowUpErrorDoesNotThrow() {
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-5' },
+    replied: true,
+    deferred: false,
+    isChatInputCommand: () => true,
+    reply: async () => {
+      throw new Error('reply should not be called');
+    },
+    followUp: async () => {
+      const err = new Error('Interaction has already been acknowledged.');
+      err.code = 40060;
+      throw err;
+    }
+  };
+
+  const client = {
+    commands: new Map([
+      [
+        'ping',
+        {
+          execute: async () => {
+            throw new Error('forced command failure 2');
+          }
+        }
+      ]
+    ]),
+    cooldowns: {}
+  };
+
+  await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
   await testBenignUnknownInteractionErrorDoesNotThrow();
+  await testDeferredInteractionUsesFollowUpOnError();
+  await testBenignAlreadyAcknowledgedFollowUpErrorDoesNotThrow();
   console.log('interaction-create.test.js passed');
 })();
