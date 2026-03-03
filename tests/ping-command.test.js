@@ -12,6 +12,8 @@ assert.strictEqual(cmd.normalizePingMs(50.8), 50);
 assert.strictEqual(cmd.normalizePingMs('invalid'), null);
 assert.strictEqual(cmd.normalizePingMs(-1), null);
 assert.strictEqual(cmd.normalizePingMs(''), null);
+assert.strictEqual(cmd.normalizePingMs(null), null);
+assert.strictEqual(cmd.normalizePingMs(undefined), null);
 assert.strictEqual(cmd.normalizePingMs('   '), null);
 assert.strictEqual(cmd.getLatencyBadge(50), '🟢');
 assert.strictEqual(cmd.getLatencyBadge(100), '🟢');
@@ -25,6 +27,10 @@ const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws:
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
 assert.strictEqual(metrics.badge, '🟡');
+const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
+assert.strictEqual(metricsInvalid.latencyMs, null);
+assert.strictEqual(metricsInvalid.wsPingMs, null);
+assert.strictEqual(metricsInvalid.badge, '⚪');
 assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
   '2026-01-01T00:00:00.000Z'
