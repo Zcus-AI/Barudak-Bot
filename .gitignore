@@ -5,4 +5,6 @@ bots.json
 npm-debug.log*
 tokens.json
 
+autonomous/dev_log.md
+autonomous/autonomous-metrics.json
 

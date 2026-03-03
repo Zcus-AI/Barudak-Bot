@@ -19,7 +19,11 @@ class AutonomousEngine {
     this.timer = null;
     this.iterationCount = 0;
     this.lastAutoCommitHash = null;
-    this.ignoredFiles = new Set(['autonomous/autonomous-metrics.json', 'dev_log.md', 'control.json']);
+    this.ignoredFiles = new Set([
+      'autonomous/autonomous-metrics.json',
+      'autonomous/dev_log.md',
+      'autonomous/control.json'
+    ]);
   }
 
   readControl() {
@@ -114,7 +118,7 @@ class AutonomousEngine {
       'Targetkan perubahan kecil realistis untuk Discord bot (fitur kecil/refactor/validasi/error handling/test/logging).',
       'Batas maksimal perubahan sekitar 200 baris total.',
       'Jangan merusak project, jangan hapus fitur lama tanpa alasan kuat.',
-      'Pastikan syntax valid, dan update dev_log.md hanya jika perubahan nyata dilakukan.',
+      'Pastikan syntax valid, dan update autonomous/dev_log.md hanya jika perubahan nyata dilakukan.',
       'Kerjakan langsung pada filesystem project ini.'
     ].join(' ');
   }

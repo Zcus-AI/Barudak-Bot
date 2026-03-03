@@ -11,9 +11,9 @@ Struktur modular Discord bot berbasis `discord.js` dengan command loader, event 
 - `src/config` - konfigurasi environment
 - `autonomous/index.js` - entrypoint khusus sistem autonomous (terpisah dari bot)
 - `autonomous/autonomousEngine.js` - engine autonomous
+- `autonomous/control.json` - kontrol autonomous mode (khusus subsystem autonomous)
+- `autonomous/dev_log.md` - catatan iterasi subsystem autonomous
 - `tests` - test sederhana
-- `control.json` - kontrol autonomous mode
-- `dev_log.md` - catatan iterasi pengembangan
 
 ## Environment
 

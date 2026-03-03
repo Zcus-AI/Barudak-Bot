@@ -6,36 +6,6 @@ const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
 const CooldownManager = require('./src/utils/cooldown');
 
-function normalizeControlShape(control) {
-  if (!control || typeof control !== 'object' || Array.isArray(control)) {
-    logger.warn('control.json format tidak valid, fallback autonomous_mode=false');
-    return { autonomous_mode: false };
-  }
-
-  if (typeof control.autonomous_mode !== 'boolean') {
-    logger.warn('control.json.autonomous_mode bukan boolean, fallback autonomous_mode=false');
-    return { ...control, autonomous_mode: false };
-  }
-
-  return control;
-}
-
-function readControl() {
-  const controlPath = path.join(__dirname, 'control.json');
-  try {
-    const raw = fs.readFileSync(controlPath, 'utf8');
-    const parsed = JSON.parse(raw);
-    return normalizeControlShape(parsed);
-  } catch (error) {
-    if (error?.code === 'ENOENT') {
-      logger.warn('control.json tidak ditemukan, fallback autonomous_mode=false');
-    } else {
-      logger.error('control.json gagal dibaca/parse, fallback autonomous_mode=false', error);
-    }
-    return { autonomous_mode: false };
-  }
-}
-
 function safeRequireModule(modulePath, label) {
   try {
     return require(modulePath);
@@ -184,39 +154,7 @@ async function registerCommands(commandData) {
   }
 }
 
-async function runAutonomousIteration() {
-  const startedAt = Date.now();
-  const control = readControl();
-  if (!control.autonomous_mode) {
-    logger.info('Autonomous mode OFF, dev loop dihentikan.');
-    logger.info(`Autonomous check duration: ${Date.now() - startedAt}ms`);
-    return;
-  }
-
-  const checks = [
-    ['src/commands/ping.js', fs.existsSync(path.join(__dirname, 'src/commands/ping.js'))],
-    ['src/commands/level.js', fs.existsSync(path.join(__dirname, 'src/commands/level.js'))],
-    ['tests/cooldown.test.js', fs.existsSync(path.join(__dirname, 'tests/cooldown.test.js'))]
-  ];
-
-  const missing = checks.filter(([, ok]) => !ok).map(([file]) => file);
-  const checkedCount = checks.length;
-  const missingCount = missing.length;
-  if (missingCount > 0) {
-    logger.warn(
-      `Autonomous check: missing=${missingCount}/${checkedCount} -> ${missing.join(', ')}`
-    );
-  } else {
-    logger.info(`Autonomous check: baseline project stabil. checked=${checkedCount}`);
-  }
-
-  const elapsedMs = Date.now() - startedAt;
-  logger.info(`Autonomous check duration: ${elapsedMs}ms`);
-}
-
 async function bootstrap() {
-  const control = readControl();
-
   const client = new Client({ intents: [GatewayIntentBits.Guilds] });
   client.commands = new Collection();
   client.cooldowns = new CooldownManager();
@@ -236,7 +174,6 @@ async function bootstrap() {
   }
 
   logger.info(`Bootstrap summary: command_payload=${commandData.length}`);
-  logger.info(`Autonomous subsystem: ${control.autonomous_mode ? 'ON (health-check only from bot runtime)' : 'OFF'}`);
 
   process.on('unhandledRejection', (err) => logger.error('Unhandled Rejection', err));
   process.on('uncaughtException', (err) => logger.error('Uncaught Exception', err));
@@ -264,12 +201,6 @@ async function bootstrap() {
       logger.error('Login Discord gagal karena error tak terduga.', error);
     }
     throw error;
-  }
-
-  try {
-    await runAutonomousIteration();
-  } catch (error) {
-    logger.error('Autonomous iteration gagal, bot tetap berjalan.', error);
   }
 }
 
