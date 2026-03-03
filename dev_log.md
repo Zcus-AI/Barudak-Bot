@@ -310,3 +310,18 @@ File Diubah:
 Deskripsi: Menambahkan fitur kecil pada /ping untuk menampilkan estimasi latency berdasarkan `interaction.createdTimestamp`, dengan fallback `n/a` jika timestamp tidak valid. Ditambahkan helper `getLatencyMs()` dan unit test untuk formatter + payload reply command.
 Status Runtime: Lolos syntax check + test (ping, cooldown, interaction-create, uptime)
 Next Plan: Tambah opsi menampilkan websocket ping client (jika tersedia) untuk observability jaringan.
+
+[ITERATION #24]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Sentralisasi formatter metrics untuk command ping/uptime
+File Dibuat:
+- src/utils/metrics-format.js
+- tests/metrics-format.test.js
+File Diubah:
+- src/commands/ping.js
+- src/commands/uptime.js
+- dev_log.md
+Deskripsi: Mengekstrak logic formatter duration/bytes dan perhitungan latency interaction ke util bersama `metrics-format`, lalu command `/ping` dan `/uptime` memakai util tersebut. Ini mengurangi duplikasi dan memudahkan maintainability tanpa mengubah perilaku command.
+Status Runtime: Lolos syntax check + test (metrics-format, ping, uptime, cooldown, interaction-create)
+Next Plan: Rapikan test command agar memanfaatkan util test helper yang reusable untuk verifikasi payload interaction.

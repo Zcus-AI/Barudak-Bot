@@ -1,11 +1,4 @@
-function getLatencyMs(interaction) {
-  const createdAt = Number(interaction?.createdTimestamp);
-  if (!Number.isFinite(createdAt) || createdAt <= 0) {
-    return null;
-  }
-  const latency = Date.now() - createdAt;
-  return Math.max(0, Math.floor(latency));
-}
+const { getInteractionLatencyMs } = require('../utils/metrics-format');
 
 module.exports = {
   data: {
@@ -13,9 +6,9 @@ module.exports = {
     description: 'Balas dengan Pong!'
   },
   cooldownMs: 3000,
-  getLatencyMs,
+  getLatencyMs: getInteractionLatencyMs,
   async execute(interaction) {
-    const latencyMs = getLatencyMs(interaction);
+    const latencyMs = getInteractionLatencyMs(interaction);
     const latencyText = latencyMs === null ? 'n/a' : `${latencyMs}ms`;
 
     await interaction.reply({
