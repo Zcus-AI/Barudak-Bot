@@ -798,3 +798,16 @@ File Diubah:
 Deskripsi: Menambahkan baris `🧮 UptimeSec` pada output /uptime untuk memberikan nilai detik mentah (integer) selain format human-readable. Ini memudahkan korelasi cepat saat monitoring/log comparison.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan opsi toggle detail output /uptime agar field tambahan bisa disembunyikan saat mode ringkas.
+
+[ITERATION #60]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Sentralisasi label output command /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- dev_log.md
+Deskripsi: Merapikan builder /uptime dengan mengekstrak label teks ke konstanta `UPTIME_LABELS` dan menyusun output melalui array + join. Perubahan ini mengurangi hardcoded string berulang dan memudahkan maintenance/penyesuaian label di satu titik.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan ekstraksi konstanta label serupa untuk command /ping agar konsistensi format output makin baik.

@@ -1,5 +1,14 @@
 const { formatDuration, formatBytes, formatRuntimeInfo } = require('../utils/metrics-format');
 
+const UPTIME_LABELS = {
+  uptime: '⏱️ Uptime',
+  uptimeSec: '🧮 UptimeSec',
+  rss: '🧠 RAM (RSS)',
+  runtime: '🖥️ Runtime',
+  node: '🧩 Node',
+  arch: '🏗️ Arch'
+};
+
 function safeRuntimeCall(runtime, fnName, fallbackValue) {
   try {
     if (runtime && typeof runtime[fnName] === 'function') {
@@ -23,7 +32,14 @@ function buildUptimeMessage(runtime = process) {
 
   const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
 
-  return `⏱️ Uptime: ${uptimeText}\n🧮 UptimeSec: ${uptimeSecondsRaw}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}\n🏗️ Arch: ${arch}`;
+  return [
+    `${UPTIME_LABELS.uptime}: ${uptimeText}`,
+    `${UPTIME_LABELS.uptimeSec}: ${uptimeSecondsRaw}`,
+    `${UPTIME_LABELS.rss}: ${rssText}`,
+    `${UPTIME_LABELS.runtime}: ${runtimeText}`,
+    `${UPTIME_LABELS.node}: ${nodeVersion}`,
+    `${UPTIME_LABELS.arch}: ${arch}`
+  ].join('\n');
 }
 
 module.exports = {
