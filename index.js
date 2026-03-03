@@ -4,6 +4,7 @@ const { Client, Collection, GatewayIntentBits, REST, Routes } = require('discord
 const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
 const CooldownManager = require('./src/utils/cooldown');
+const AutonomousEngine = require('./src/dev/autonomousEngine');
 
 function readControl() {
   try {
@@ -99,6 +100,11 @@ async function bootstrap() {
   const client = new Client({ intents: [GatewayIntentBits.Guilds] });
   client.commands = new Collection();
   client.cooldowns = new CooldownManager();
+  client.autonomousEngine = new AutonomousEngine({
+    controlPath: path.join(__dirname, 'control.json'),
+    devLogPath: path.join(__dirname, 'dev_log.md'),
+    iterationDelayMs: 60000
+  });
 
   const commandData = loadCommands(client);
   loadEvents(client);
