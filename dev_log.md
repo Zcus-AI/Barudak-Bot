@@ -434,3 +434,16 @@ File Diubah:
 Deskripsi: Menambahkan helper `sendCooldownReply()` dengan penanganan error benign (Unknown Interaction/Already Acknowledged) agar kegagalan reply cooldown tidak mengeskalasi error command. Ditambah unit test untuk memastikan kasus benign pada cooldown reply tidak melempar exception.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan threshold warning untuk command execution duration agar kasus lambat lebih mudah terdeteksi.
+
+[ITERATION #33]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Tambahan unit test normalisasi waktu CooldownManager
+File Dibuat:
+- (none)
+File Diubah:
+- tests/cooldown.test.js
+- dev_log.md
+Deskripsi: Menambahkan test eksplisit untuk `normalizeNow()` agar timestamp valid tetap dipertahankan dan input negatif fallback ke waktu saat ini. Ini melengkapi coverage validasi waktu yang sebelumnya hanya teruji via `check()`.
+Status Runtime: Lolos seluruh test utama (cooldown, interaction-create, uptime, ping, metrics-format).
+Next Plan: Tambah test startup loader terisolasi agar skenario duplikasi nama command teruji otomatis.

@@ -36,4 +36,10 @@ assert.strictEqual(invalidNowFirst.allowed, true, 'Invalid now input should fall
 const invalidNowSecond = manager.check('invalid-now:user', 1000, undefined);
 assert.strictEqual(invalidNowSecond.allowed, false, 'Fallback now should still enforce cooldown');
 
+const explicitNow = manager.normalizeNow(12345);
+assert.strictEqual(explicitNow, 12345, 'normalizeNow should keep valid timestamp as-is');
+const beforeFallback = Date.now();
+const fallbackNow = manager.normalizeNow(-10);
+assert.ok(fallbackNow >= beforeFallback, 'normalizeNow should fallback to current time for negative input');
+
 console.log('cooldown.test.js passed');
