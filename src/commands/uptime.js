@@ -1,5 +1,14 @@
 const { formatDuration, formatBytes, formatRuntimeInfo } = require('../utils/metrics-format');
 
+function buildUptimeMessage(runtime = process) {
+  const uptimeText = formatDuration(runtime.uptime());
+  const rssText = formatBytes(runtime.memoryUsage().rss);
+  const runtimeText = formatRuntimeInfo(runtime);
+  const nodeVersion = runtime.version || process.version;
+
+  return `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}`;
+}
+
 module.exports = {
   data: {
     name: 'uptime',
@@ -8,14 +17,10 @@ module.exports = {
   cooldownMs: 5000,
   formatDuration,
   formatBytes,
+  buildUptimeMessage,
   async execute(interaction) {
-    const uptimeText = formatDuration(process.uptime());
-    const rssText = formatBytes(process.memoryUsage().rss);
-    const runtimeText = formatRuntimeInfo();
-    const nodeVersion = process.version;
-
     await interaction.reply({
-      content: `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}`,
+      content: buildUptimeMessage(process),
       ephemeral: true
     });
   }

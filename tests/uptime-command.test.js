@@ -6,6 +6,17 @@ assert.strictEqual(typeof cmd.execute, 'function');
 assert.strictEqual(cmd.formatDuration(3661), '1j 1m 1d');
 assert.strictEqual(cmd.formatDuration(90061), '1h 1j 1m 1d');
 assert.strictEqual(cmd.formatBytes(1024), '1.0 KB');
+assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => 3661,
+      memoryUsage: () => ({ rss: 2048 }),
+      platform: 'linux',
+      pid: 999,
+      version: 'v99.0.0'
+    })
+    .includes('🧩 Node: v99.0.0')
+);
 
 (async () => {
   let payload = null;

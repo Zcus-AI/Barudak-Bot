@@ -637,3 +637,17 @@ File Diubah:
 Deskripsi: Menambahkan informasi versi Node.js (`process.version`) pada output /uptime untuk membantu diagnosa environment runtime dengan cepat. Fitur ini melengkapi info uptime/RAM/runtime yang sudah ada tanpa mengubah command flow.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan mode compact/verbose untuk output /uptime agar lebih fleksibel di channel sempit.
+
+[ITERATION #48]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Ekstraksi builder pesan /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Merapikan command /uptime dengan mengekstrak `buildUptimeMessage(runtime)` agar logic formatting terpusat, lebih mudah diuji, dan tidak tercampur dengan reply side-effect. Behavior output tetap sama.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menyatukan builder pola serupa pada /ping dan /uptime ke util message formatter bersama.
