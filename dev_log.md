@@ -379,3 +379,17 @@ File Diubah:
 Deskripsi: Menambahkan info log setelah command berhasil dieksekusi untuk mencatat lama proses (`elapsedMs`). Ini membantu profiling ringan command yang lambat tanpa mengubah behavior command existing.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah logging warning khusus untuk command execution di atas threshold tertentu (mis. >1000ms).
+
+[ITERATION #29]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /ping menampilkan websocket ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan metrik baru pada command /ping: websocket ping (`client.ws.ping`) dengan fallback `n/a` bila tidak tersedia. Output kini menampilkan latency interaction dan WS ping sekaligus agar diagnosa koneksi lebih informatif.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan opsi detail opsional di /ping (mis. timestamp server) tanpa mengganggu output ringkas default.
