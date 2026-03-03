@@ -56,6 +56,7 @@ function safeReadJsFiles(dirPath, label) {
 }
 
 function loadCommands(client) {
+  const startedAt = Date.now();
   const commandsPath = path.join(__dirname, 'src', 'commands');
   const files = safeReadJsFiles(commandsPath, 'commands');
   const payload = [];
@@ -98,10 +99,12 @@ function loadCommands(client) {
   if (loadedNames.length > 0) {
     logger.info(`Command aktif: ${loadedNames.join(', ')}`);
   }
+  logger.info(`Command loader duration: ${Date.now() - startedAt}ms`);
   return payload;
 }
 
 function loadEvents(client) {
+  const startedAt = Date.now();
   const eventsPath = path.join(__dirname, 'src', 'events');
   const files = safeReadJsFiles(eventsPath, 'events');
   const loadedNames = [];
@@ -142,6 +145,7 @@ function loadEvents(client) {
   if (loadedNames.length > 0) {
     logger.info(`Event aktif: ${loadedNames.join(', ')}`);
   }
+  logger.info(`Event loader duration: ${Date.now() - startedAt}ms`);
 }
 
 async function registerCommands(commandData) {
