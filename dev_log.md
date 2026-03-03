@@ -651,3 +651,17 @@ File Diubah:
 Deskripsi: Merapikan command /uptime dengan mengekstrak `buildUptimeMessage(runtime)` agar logic formatting terpusat, lebih mudah diuji, dan tidak tercampur dengan reply side-effect. Behavior output tetap sama.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menyatukan builder pola serupa pada /ping dan /uptime ke util message formatter bersama.
+
+[ITERATION #49]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Guard runtime object pada builder /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan validasi defensif di `buildUptimeMessage()` agar aman ketika object runtime tidak menyediakan `uptime()` atau `memoryUsage()`. Pada kasus ini, builder otomatis fallback ke `process` sehingga command tidak crash.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah validasi fallback serupa pada command lain yang menerima dependency injection runtime/client.

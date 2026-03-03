@@ -17,6 +17,10 @@ assert.ok(
     })
     .includes('🧩 Node: v99.0.0')
 );
+assert.ok(
+  cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes('🧠 RAM (RSS):'),
+  'buildUptimeMessage should fallback safely when uptime/memoryUsage methods are missing'
+);
 
 (async () => {
   let payload = null;

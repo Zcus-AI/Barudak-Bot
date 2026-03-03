@@ -1,10 +1,15 @@
 const { formatDuration, formatBytes, formatRuntimeInfo } = require('../utils/metrics-format');
 
 function buildUptimeMessage(runtime = process) {
-  const uptimeText = formatDuration(runtime.uptime());
-  const rssText = formatBytes(runtime.memoryUsage().rss);
+  const uptimeSeconds =
+    runtime && typeof runtime.uptime === 'function' ? runtime.uptime() : process.uptime();
+  const memoryUsage =
+    runtime && typeof runtime.memoryUsage === 'function' ? runtime.memoryUsage() : process.memoryUsage();
+
+  const uptimeText = formatDuration(uptimeSeconds);
+  const rssText = formatBytes(memoryUsage?.rss);
   const runtimeText = formatRuntimeInfo(runtime);
-  const nodeVersion = runtime.version || process.version;
+  const nodeVersion = runtime?.version || process.version;
 
   return `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}`;
 }
