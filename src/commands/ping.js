@@ -57,7 +57,7 @@ function normalizeIsoTimestamp(value) {
     return getIsoNow();
   }
   const trimmed = value.trim();
-  if (!trimmed) {
+  if (!trimmed || trimmed.length > 64) {
     return getIsoNow();
   }
 
