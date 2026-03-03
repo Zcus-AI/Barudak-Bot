@@ -172,9 +172,11 @@ async function registerCommands(commandData) {
 }
 
 async function runAutonomousIteration() {
+  const startedAt = Date.now();
   const control = readControl();
   if (!control.autonomous_mode) {
     logger.info('Autonomous mode OFF, dev loop dihentikan.');
+    logger.info(`Autonomous check duration: ${Date.now() - startedAt}ms`);
     return;
   }
 
@@ -194,6 +196,9 @@ async function runAutonomousIteration() {
   } else {
     logger.info(`Autonomous check: baseline project stabil. checked=${checkedCount}`);
   }
+
+  const elapsedMs = Date.now() - startedAt;
+  logger.info(`Autonomous check duration: ${elapsedMs}ms`);
 }
 
 async function bootstrap() {
