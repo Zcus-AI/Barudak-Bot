@@ -19,5 +19,15 @@ assert.ok(getInteractionLatencyMs({ createdTimestamp: Date.now() - 50 }) >= 0);
 assert.strictEqual(formatRuntimeInfo({ platform: 'linux', pid: 1234 }), 'linux | pid:1234');
 assert.ok(formatRuntimeInfo({ platform: 'darwin', pid: 'invalid' }).startsWith('darwin | pid:'));
 assert.ok(formatRuntimeInfo({ platform: '   ', pid: 777 }).startsWith(`${process.platform} | pid:777`));
+assert.strictEqual(
+  formatRuntimeInfo({ platform: 'win32', pid: -5 }),
+  `win32 | pid:${process.pid}`,
+  'formatRuntimeInfo should fallback to process pid when provided pid is negative'
+);
+assert.strictEqual(
+  formatRuntimeInfo({ platform: 'win32', pid: 88.9 }),
+  'win32 | pid:88',
+  'formatRuntimeInfo should floor floating pid values'
+);
 
 console.log('metrics-format.test.js passed');

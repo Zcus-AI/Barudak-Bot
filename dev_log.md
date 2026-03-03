@@ -517,3 +517,16 @@ File Diubah:
 Deskripsi: Menambahkan helper `safeReadJsFiles()` dengan try/catch agar kegagalan baca direktori command/event (mis. path hilang/permission issue) tidak membuat bootstrap langsung crash. Loader kini fallback ke array kosong dan mencatat error yang jelas.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan test terisolasi untuk helper bootstrap agar jalur filesystem error bisa diverifikasi otomatis.
+
+[ITERATION #39]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Perluasan test runtime formatter edge-case
+File Dibuat:
+- (none)
+File Diubah:
+- tests/metrics-format.test.js
+- dev_log.md
+Deskripsi: Menambahkan test tambahan untuk `formatRuntimeInfo()` pada kasus PID negatif (fallback ke `process.pid`) dan PID floating-point (dibulatkan ke bawah). Ini memperkuat jaminan output runtime tetap konsisten di edge-case input.
+Status Runtime: Lolos seluruh test utama (metrics-format, ping, uptime, cooldown, interaction-create).
+Next Plan: Tambah test terisolasi helper bootstrap agar skenario filesystem/read error tidak hanya tervalidasi lewat runtime umum.
