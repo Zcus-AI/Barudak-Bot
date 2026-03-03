@@ -825,3 +825,16 @@ File Diubah:
 Deskripsi: Menambahkan normalisasi nilai `arch` di `buildUptimeMessage()` agar input kosong/whitespace tidak menghasilkan output `Arch` yang kosong. Builder kini fallback aman ke `process.arch` pada kasus tersebut.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan validasi serupa untuk field metadata lain (mis. version) agar output runtime tetap konsisten pada input anomali.
+
+[ITERATION #62]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening struktur data control.json saat bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan `normalizeControlShape()` pada alur `readControl()` untuk menangani format `control.json` yang tidak valid (bukan object/array) atau `autonomous_mode` bukan boolean. Sistem kini fallback aman ke `autonomous_mode=false` dengan warning terarah tanpa menghentikan proses startup.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan test terisolasi untuk helper normalisasi control agar regresi validasi config dapat terdeteksi otomatis.

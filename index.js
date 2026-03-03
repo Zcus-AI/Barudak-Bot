@@ -7,11 +7,26 @@ const logger = require('./src/utils/logger');
 const CooldownManager = require('./src/utils/cooldown');
 const AutonomousEngine = require('./src/dev/autonomousEngine');
 
+function normalizeControlShape(control) {
+  if (!control || typeof control !== 'object' || Array.isArray(control)) {
+    logger.warn('control.json format tidak valid, fallback autonomous_mode=false');
+    return { autonomous_mode: false };
+  }
+
+  if (typeof control.autonomous_mode !== 'boolean') {
+    logger.warn('control.json.autonomous_mode bukan boolean, fallback autonomous_mode=false');
+    return { ...control, autonomous_mode: false };
+  }
+
+  return control;
+}
+
 function readControl() {
   const controlPath = path.join(__dirname, 'control.json');
   try {
     const raw = fs.readFileSync(controlPath, 'utf8');
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return normalizeControlShape(parsed);
   } catch (error) {
     if (error?.code === 'ENOENT') {
       logger.warn('control.json tidak ditemukan, fallback autonomous_mode=false');
