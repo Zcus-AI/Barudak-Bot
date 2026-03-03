@@ -12,10 +12,14 @@ function formatMs(value) {
   return value === null ? 'n/a' : `${value}ms`;
 }
 
-function buildPingMessage(interaction, client) {
+function getIsoNow() {
+  return new Date().toISOString();
+}
+
+function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
   const latencyMs = getInteractionLatencyMs(interaction);
   const wsPingMs = getWebsocketPingMs(client);
-  return `🏓 Pong! Latency: ${formatMs(latencyMs)} | WS: ${formatMs(wsPingMs)}`;
+  return `🏓 Pong! Latency: ${formatMs(latencyMs)} | WS: ${formatMs(wsPingMs)} | At: ${nowIso}`;
 }
 
 module.exports = {

@@ -543,3 +543,17 @@ File Diubah:
 Deskripsi: Menambahkan warning log eksplisit ketika `registerCommands()` gagal/skip sehingga startup log lebih informatif: bot tetap login, namun operator langsung tahu bahwa registrasi slash command tidak sepenuhnya berhasil.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan kategori reason singkat pada return status register command untuk membedakan skip karena config kosong vs gagal API.
+
+[ITERATION #41]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /ping menampilkan timestamp respons
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan informasi waktu respons (`At: <ISO timestamp>`) pada output /ping agar memudahkan verifikasi waktu reply bot saat troubleshooting. Builder pesan /ping kini menerima timestamp injeksi untuk test deterministik.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan opsi mode ringkas untuk /ping agar bisa menonaktifkan detail timestamp saat tidak dibutuhkan.

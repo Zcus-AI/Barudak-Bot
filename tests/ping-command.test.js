@@ -8,12 +8,14 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 42.9 } }), 42);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 'invalid' } }), null);
 assert.ok(
-  cmd.buildPingMessage({ createdTimestamp: Date.now() - 25 }, { ws: { ping: 10 } }).includes('WS: 10ms'),
+  cmd.buildPingMessage({ createdTimestamp: Date.now() - 25 }, { ws: { ping: 10 } }, '2026-01-01T00:00:00.000Z').includes('WS: 10ms'),
   'buildPingMessage should include websocket ping in ms format'
 );
 assert.ok(
-  cmd.buildPingMessage({ createdTimestamp: 'invalid' }, {}).includes('Latency: n/a | WS: n/a'),
-  'buildPingMessage should fallback for missing latency metrics'
+  cmd
+    .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
+    .includes('Latency: n/a | WS: n/a | At: 2026-01-01T00:00:00.000Z'),
+  'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
 (async () => {
@@ -32,6 +34,7 @@ assert.ok(
   assert.ok(payload.content.startsWith('🏓 Pong! Latency:'), 'ping reply should include latency info');
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
+  assert.ok(/\| At: .*Z$/.test(payload.content), 'ping reply should include ISO timestamp');
 
   let invalidPayload = null;
   await cmd.execute(
