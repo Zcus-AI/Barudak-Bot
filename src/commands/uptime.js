@@ -20,8 +20,13 @@ function safeRuntimeCall(runtime, fnName, fallbackValue) {
   return fallbackValue;
 }
 
+function normalizeNodeVersion(value) {
+  const raw = String(value || '').trim();
+  return raw || process.version;
+}
+
 function getRuntimeMeta(runtime = process) {
-  const nodeVersion = runtime?.version || process.version;
+  const nodeVersion = normalizeNodeVersion(runtime?.version);
   const rawArch = String(runtime?.arch || process.arch).trim();
   return {
     runtimeText: formatRuntimeInfo(runtime),
@@ -57,6 +62,7 @@ module.exports = {
   cooldownMs: 5000,
   formatDuration,
   formatBytes,
+  normalizeNodeVersion,
   buildUptimeMessage,
   async execute(interaction) {
     await interaction.reply({

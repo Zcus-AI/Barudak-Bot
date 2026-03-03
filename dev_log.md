@@ -957,3 +957,23 @@ File Diubah:
 Deskripsi: Merapikan `buildUptimeMessage()` dengan mengekstrak logika metadata runtime ke helper `getRuntimeMeta()`. Refactor ini mengurangi kepadatan fungsi utama dan menjaga tanggung jawab formatting metadata tetap terpusat tanpa mengubah output command.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan ekstraksi helper sanitasi numerik agar dapat dipakai bersama antara command uptime dan ping.
+
+[ITERATION #71]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi nilai version pada metadata runtime /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan `normalizeNodeVersion()` agar nilai `runtime.version` yang kosong/whitespace tidak muncul mentah di output. Builder kini fallback aman ke `process.version`, dan ditambah unit test untuk skenario valid + fallback.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah validasi ringan untuk metadata runtime lain jika ditemukan input injection yang tidak konsisten.
+
+[ITERATION AUTO #1]
+Tanggal: 2026-03-03T04:43:12.267Z
+Jenis Perubahan: Refactor Improvement
+Deskripsi: Refactor Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed

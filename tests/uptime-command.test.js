@@ -6,6 +6,8 @@ assert.strictEqual(typeof cmd.execute, 'function');
 assert.strictEqual(cmd.formatDuration(3661), '1j 1m 1d');
 assert.strictEqual(cmd.formatDuration(90061), '1h 1j 1m 1d');
 assert.strictEqual(cmd.formatBytes(1024), '1.0 KB');
+assert.strictEqual(cmd.normalizeNodeVersion('v22.0.0'), 'v22.0.0');
+assert.strictEqual(cmd.normalizeNodeVersion('   '), process.version);
 assert.ok(
   cmd
     .buildUptimeMessage({
