@@ -237,8 +237,11 @@ async function bootstrap() {
     return;
   }
 
+  const loginStartedAt = Date.now();
   try {
     await client.login(config.token);
+    const botTag = client.user?.tag || client.user?.id || 'unknown-bot';
+    logger.info(`Login Discord sukses sebagai ${botTag} (${Date.now() - loginStartedAt}ms)`);
   } catch (error) {
     if (error?.code === 'TokenInvalid') {
       logger.error('Login Discord gagal: token tidak valid (TokenInvalid).');
