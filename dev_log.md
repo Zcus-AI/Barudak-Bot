@@ -2154,3 +2154,17 @@ File Diubah:
 Deskripsi: Menambahkan `ref` singkat (6 karakter akhir interaction id) ke log `Terima /command ...` agar korelasi antar-log lebih mudah saat menelusuri request yang sama di jalur sukses/error.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menambahkan ref yang sama pada log cooldown/error supaya chain observability makin lengkap.
+
+[ITERATION #114]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Menambahkan indikator Stability pada output /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan metrik `Stability` (stable/normal/spiky/unknown) berdasarkan nilai Delta latency pada /ping. Ini memberi indikator kualitas kestabilan koneksi tambahan selain badge/tier.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan threshold stability configurable agar bisa dituning per lingkungan jaringan.

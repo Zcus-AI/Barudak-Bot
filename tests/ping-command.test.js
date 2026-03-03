@@ -44,6 +44,7 @@ const segments = cmd.buildPingSegments(
 assert.strictEqual(segments.badge, '🟢');
 assert.strictEqual(segments.wsText, '42ms');
 assert.strictEqual(segments.deltaText, '58ms');
+assert.strictEqual(segments.stability, 'normal');
 assert.strictEqual(segments.ref, '456789');
 assert.strictEqual(segments.scope, 'dm');
 assert.strictEqual(segments.at, '2026-01-01T00:00:00.000Z');
@@ -54,16 +55,22 @@ const guildSegments = cmd.buildPingSegments(
   '2026-01-01T00:00:00.000Z'
 );
 assert.strictEqual(guildSegments.badge, '🔴');
+assert.strictEqual(guildSegments.stability, 'spiky');
 assert.strictEqual(guildSegments.tier, 'poor');
 assert.strictEqual(guildSegments.scope, 'guild');
 assert.strictEqual(cmd.getLatencyDeltaMs(100, 80), 20);
 assert.strictEqual(cmd.getLatencyDeltaMs(null, 80), null);
+assert.strictEqual(cmd.getLatencyStability(20), 'stable');
+assert.strictEqual(cmd.getLatencyStability(80), 'normal');
+assert.strictEqual(cmd.getLatencyStability(180), 'spiky');
+assert.strictEqual(cmd.getLatencyStability(null), 'unknown');
 
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
 assert.strictEqual(typeof metrics.deltaMs, 'number');
 assert.strictEqual(metrics.badge, '🟡');
+assert.strictEqual(metrics.stability, 'stable');
 assert.strictEqual(metrics.tier, 'medium');
 
 const metricsBoundaryGood = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 100 } });
@@ -76,11 +83,13 @@ assert.strictEqual(metricsBoundaryMedium.tier, 'medium');
 
 const metricsBoundaryPoor = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 251 } });
 assert.strictEqual(metricsBoundaryPoor.badge, '🔴');
+assert.strictEqual(metricsBoundaryPoor.stability, 'spiky');
 assert.strictEqual(metricsBoundaryPoor.tier, 'poor');
 
 const metricsStringPing = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: '120' } });
 assert.strictEqual(metricsStringPing.wsPingMs, 120);
 assert.strictEqual(metricsStringPing.badge, '🟡');
+assert.strictEqual(metricsStringPing.stability, 'stable');
 assert.strictEqual(metricsStringPing.tier, 'medium');
 
 const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
@@ -88,6 +97,7 @@ assert.strictEqual(metricsInvalid.latencyMs, null);
 assert.strictEqual(metricsInvalid.wsPingMs, null);
 assert.strictEqual(metricsInvalid.deltaMs, null);
 assert.strictEqual(metricsInvalid.badge, '⚪');
+assert.strictEqual(metricsInvalid.stability, 'unknown');
 assert.strictEqual(metricsInvalid.tier, 'unknown');
 assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
@@ -109,7 +119,7 @@ assert.ok(
 assert.ok(
   cmd
     .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
-    .includes('Latency: n/a | WS: n/a | Delta: n/a | Tier: unknown | Scope: dm | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
+    .includes('Latency: n/a | WS: n/a | Delta: n/a | Stability: unknown | Tier: unknown | Scope: dm | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
   'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
@@ -132,6 +142,7 @@ assert.ok(
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
   assert.ok(payload.content.includes('Delta:'), 'ping reply should include latency delta label');
+  assert.ok(payload.content.includes('Stability:'), 'ping reply should include latency stability label');
   assert.ok(payload.content.includes('Tier: good'), 'ping reply should include latency tier label');
   assert.ok(payload.content.includes('Scope: dm'), 'ping reply should include interaction scope label');
   assert.ok(payload.content.includes('Ref: 456789'), 'ping reply should include short interaction reference');

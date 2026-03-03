@@ -78,16 +78,26 @@ function getLatencyDeltaMs(latencyMs, wsPingMs) {
   return Math.abs(safeLatency - safeWs);
 }
 
+function getLatencyStability(deltaMs) {
+  const safeDelta = normalizePingMs(deltaMs);
+  if (safeDelta === null) return 'unknown';
+  if (safeDelta <= 40) return 'stable';
+  if (safeDelta <= 120) return 'normal';
+  return 'spiky';
+}
+
 function getPingMetrics(interaction, client) {
   const latencyMs = getInteractionLatencyMs(interaction);
   const wsPingMs = getWebsocketPingMs(client);
   const badge = getLatencyBadge(wsPingMs);
+  const deltaMs = getLatencyDeltaMs(latencyMs, wsPingMs);
   return {
     latencyMs,
     wsPingMs,
-    deltaMs: getLatencyDeltaMs(latencyMs, wsPingMs),
+    deltaMs,
     badge,
-    tier: getTierFromBadge(badge)
+    tier: getTierFromBadge(badge),
+    stability: getLatencyStability(deltaMs)
   };
 }
 
@@ -113,6 +123,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
     wsText: formatMs(metrics.wsPingMs),
     tier: metrics.tier,
     deltaText: formatMs(metrics.deltaMs),
+    stability: metrics.stability,
     scope: getScopeLabel(interaction),
     ref: getInteractionRef(interaction),
     at: normalizeIsoTimestamp(nowIso)
@@ -120,7 +131,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
 }
 
 function formatPingSummary(segments) {
-  return `🏓 Pong! ${segments.badge} Latency: ${segments.latencyText} | WS: ${segments.wsText} | Delta: ${segments.deltaText} | Tier: ${segments.tier} | Scope: ${segments.scope} | Ref: ${segments.ref} | At: ${segments.at}`;
+  return `🏓 Pong! ${segments.badge} Latency: ${segments.latencyText} | WS: ${segments.wsText} | Delta: ${segments.deltaText} | Stability: ${segments.stability} | Tier: ${segments.tier} | Scope: ${segments.scope} | Ref: ${segments.ref} | At: ${segments.at}`;
 }
 
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
@@ -140,6 +151,7 @@ module.exports = {
   getLatencyTier,
   getPingMetrics,
   getLatencyDeltaMs,
+  getLatencyStability,
   getInteractionRef,
   getScopeLabel,
   buildPingSegments,
