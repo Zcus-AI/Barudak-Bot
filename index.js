@@ -45,8 +45,21 @@ function loadCommands(client) {
       logger.warn(`Command ${file} dilewati karena format tidak valid`);
       continue;
     }
-    client.commands.set(command.data.name, command);
-    payload.push(command.data);
+
+    const commandName = String(command.data.name).trim();
+    if (!commandName) {
+      skipped += 1;
+      logger.warn(`Command ${file} dilewati karena nama command kosong`);
+      continue;
+    }
+    if (client.commands.has(commandName)) {
+      skipped += 1;
+      logger.warn(`Command ${file} dilewati karena nama duplikat: ${commandName}`);
+      continue;
+    }
+
+    client.commands.set(commandName, command);
+    payload.push({ ...command.data, name: commandName });
     loaded += 1;
   }
 

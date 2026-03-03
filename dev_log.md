@@ -407,3 +407,16 @@ File Diubah:
 Deskripsi: Merapikan command /ping dengan mengekstrak `formatMs()` dan `buildPingMessage()` agar formatting pesan terpusat dan lebih mudah diuji. Behavior output tetap sama, namun struktur kode lebih modular dan test menambah coverage untuk builder message.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan util formatter umum untuk output command singkat agar konsisten lintas command.
+
+[ITERATION #31]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi nama command saat loader bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan validasi tambahan pada `loadCommands()` untuk menormalisasi nama command, menolak nama kosong setelah trim, dan mencegah command duplikat agar tidak saling overwrite diam-diam di registry. Loader kini skip command invalid/duplikat dengan warning yang jelas.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah test bootstrap terisolasi agar skenario duplicate command name terverifikasi otomatis.
