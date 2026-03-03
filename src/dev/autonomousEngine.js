@@ -84,80 +84,57 @@ class AutonomousEngine {
     return false;
   }
 
-  ensureUptimeCommand() {
-    const rel = 'src/commands/uptime.js';
-    if (this.fileExists(rel)) return null;
-
-    const content = `module.exports = {
-  data: {
-    name: 'uptime',
-    description: 'Lihat uptime bot saat ini'
-  },
-  cooldownMs: 5000,
-  async execute(interaction) {
-    const total = Math.floor(process.uptime());
-    const hours = Math.floor(total / 3600);
-    const minutes = Math.floor((total % 3600) / 60);
-    const seconds = total % 60;
-    await interaction.reply({
-      content: \`⏱️ Uptime: \${hours}j \${minutes}m \${seconds}d\`,
-      ephemeral: true
-    });
-  }
-};
-`;
-    fs.writeFileSync(safeResolve(rel), content);
-    return { action: 'Feature Improvement', details: 'Menambahkan command /uptime.', changedFiles: [rel] };
+  buildDecision() {
+    const plan = [
+      'Feature Improvement',
+      'Refactor Improvement',
+      'Validation Improvement',
+      'Error Handling Improvement',
+      'Testing Improvement',
+      'Logging Improvement'
+    ];
+    const action = plan[this.iterationCount % plan.length];
+    return {
+      action,
+      details: `${action} via OpenClaw agent dengan batas perubahan <=200 baris.`
+    };
   }
 
-  ensureInteractionValidation() {
-    const rel = 'src/events/interactionCreate.js';
-    const fullPath = safeResolve(rel);
-    if (!fs.existsSync(fullPath)) return null;
+  buildImprovementPrompt(decision) {
+    return [
+      `You are autonomous dev iteration #${this.iterationCount} for project Barudak-Bot.`,
+      `Jenis improvement: ${decision.action}.`,
+      'WAJIB lakukan modifikasi file nyata di project (bukan hanya log internal).',
+      'Targetkan perubahan kecil realistis untuk Discord bot (fitur kecil/refactor/validasi/error handling/test/logging).',
+      'Batas maksimal perubahan sekitar 200 baris total.',
+      'Jangan merusak project, jangan hapus fitur lama tanpa alasan kuat.',
+      'Pastikan syntax valid, dan update dev_log.md hanya jika perubahan nyata dilakukan.',
+      'Kerjakan langsung pada filesystem project ini.'
+    ].join(' ');
+  }
 
-    const raw = fs.readFileSync(fullPath, 'utf8');
-    if (raw.includes('Invalid command handler format')) return null;
-
-    const target = "      const command = client.commands.get(interaction.commandName);\n      if (!command) return;\n\n";
-    if (!raw.includes(target)) return null;
-
-    const patched = raw.replace(
-      target,
-      "      const command = client.commands.get(interaction.commandName);\n      if (!command) return;\n      if (typeof command.execute !== 'function') {\n        logger.warn('Invalid command handler format');\n        return;\n      }\n\n"
+  invokeOpenClawAgent(decision) {
+    const prompt = this.buildImprovementPrompt(decision);
+    logger.info('Invoking OpenClaw agent');
+    const result = spawnSync(
+      'openclaw',
+      ['agent', '--session-id', 'bc10d311-5885-494b-9592-ed2cded8e6ca', '-m', prompt],
+      { cwd: process.cwd(), encoding: 'utf8' }
     );
 
-    fs.writeFileSync(fullPath, patched);
-    return { action: 'Validation Improvement', details: 'Menambahkan validasi command.execute.', changedFiles: [rel] };
-  }
+    const stdout = (result.stdout || '').trim();
+    const stderr = (result.stderr || '').trim();
 
-  ensureUptimeTest() {
-    const rel = 'tests/uptime-command.test.js';
-    if (this.fileExists(rel)) return null;
+    if (stdout) logger.info(`OpenClaw agent stdout: ${stdout}`);
+    if (stderr) logger.warn(`OpenClaw agent stderr: ${stderr}`);
 
-    const content = `const assert = require('node:assert');
-const cmd = require('../src/commands/uptime');
-
-assert.strictEqual(cmd.data.name, 'uptime');
-assert.strictEqual(typeof cmd.execute, 'function');
-console.log('uptime-command.test.js passed');
-`;
-    fs.writeFileSync(safeResolve(rel), content);
-    return { action: 'Testing Improvement', details: 'Menambahkan test /uptime.', changedFiles: [rel] };
-  }
-
-  runOneImprovement() {
-    const steps = [
-      () => this.ensureUptimeCommand(),
-      () => this.ensureInteractionValidation(),
-      () => this.ensureUptimeTest()
-    ];
-
-    for (const step of steps) {
-      const result = step();
-      if (result) return result;
+    if (result.status !== 0) {
+      logger.error(`OpenClaw agent failed: ${stderr || stdout || `exit ${result.status}`}`);
+      return false;
     }
 
-    return { action: 'Refactor Improvement', details: 'Tidak ada task baru pada katalog saat ini.', changedFiles: [] };
+    logger.info('OpenClaw agent finished');
+    return true;
   }
 
   async getMeaningfulChangedFiles() {
@@ -267,8 +244,15 @@ console.log('uptime-command.test.js passed');
         return;
       }
 
-      const decision = this.runOneImprovement();
+      const decision = this.buildDecision();
       logger.info(`Decision taken: ${decision.action}`);
+
+      const agentOk = this.invokeOpenClawAgent(decision);
+      if (!agentOk) {
+        logger.warn('Skipping git flow because OpenClaw agent failed');
+        logger.info('Autonomous iteration completed');
+        return;
+      }
 
       const committed = await this.runGitIntegration();
       if (committed) {

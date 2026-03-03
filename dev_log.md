@@ -125,8 +125,27 @@ Deskripsi: Menambahkan debug log raw git status, eksekusi git add/commit/push de
 Status Runtime: Pending verifikasi
 Next Plan: Pantau log iterasi berikutnya untuk memastikan git push terlihat jelas saat perubahan nyata.
 
+[ITERATION #11]
+Tanggal: 2026-03-03
+Jenis Perubahan: OpenClaw Integration
+Fitur: Autonomous engine now invokes OpenClaw agent every iteration
+File Dibuat:
+- (none)
+File Diubah:
+- src/dev/autonomousEngine.js
+- dev_log.md
+Deskripsi: Setelah decision diambil, engine sekarang wajib memanggil `openclaw agent --session-id ... -m <prompt>` secara blocking. Jika OpenClaw gagal, git flow dilewati dan iterasi lanjut normal di siklus berikutnya.
+Status Runtime: Pending verifikasi syntax/runtime
+Next Plan: Pantau log untuk memastikan urutan Decision -> Invoking OpenClaw agent -> OpenClaw agent finished -> git flow.
+
 [ITERATION AUTO #4]
 Tanggal: 2026-03-03T02:15:36.952Z
+Jenis Perubahan: Refactor Improvement
+Deskripsi: Tidak ada task baru pada katalog saat ini.
+Status: Completed
+
+[ITERATION AUTO #16]
+Tanggal: 2026-03-03T02:31:43.811Z
 Jenis Perubahan: Refactor Improvement
 Deskripsi: Tidak ada task baru pada katalog saat ini.
 Status: Completed
