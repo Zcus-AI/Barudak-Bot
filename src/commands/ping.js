@@ -88,6 +88,11 @@ function getInteractionRef(interaction) {
   return normalized.slice(-6);
 }
 
+function getScopeLabel(interaction) {
+  if (interaction?.guildId) return 'guild';
+  return 'dm';
+}
+
 function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
   const metrics = getPingMetrics(interaction, client);
   return {
@@ -95,6 +100,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
     latencyText: formatMs(metrics.latencyMs),
     wsText: formatMs(metrics.wsPingMs),
     tier: metrics.tier,
+    scope: getScopeLabel(interaction),
     ref: getInteractionRef(interaction),
     at: normalizeIsoTimestamp(nowIso)
   };
@@ -102,7 +108,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
 
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
   const s = buildPingSegments(interaction, client, nowIso);
-  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Tier: ${s.tier} | Ref: ${s.ref} | At: ${s.at}`;
+  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Tier: ${s.tier} | Scope: ${s.scope} | Ref: ${s.ref} | At: ${s.at}`;
 }
 
 module.exports = {
@@ -118,6 +124,7 @@ module.exports = {
   getLatencyTier,
   getPingMetrics,
   getInteractionRef,
+  getScopeLabel,
   buildPingSegments,
   normalizeIsoTimestamp,
   buildPingMessage,

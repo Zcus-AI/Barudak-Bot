@@ -32,6 +32,8 @@ assert.strictEqual(cmd.getInteractionRef({ id: '1234567890' }), '567890');
 assert.strictEqual(cmd.getInteractionRef({ id: '  abc-123_456  ' }), '23_456');
 assert.strictEqual(cmd.getInteractionRef({ id: '!!!' }), 'n/a');
 assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
+assert.strictEqual(cmd.getScopeLabel({ guildId: '123' }), 'guild');
+assert.strictEqual(cmd.getScopeLabel({}), 'dm');
 const segments = cmd.buildPingSegments(
   { id: 'abc123456789', createdTimestamp: Date.now() - 100 },
   { ws: { ping: 42 } },
@@ -40,6 +42,7 @@ const segments = cmd.buildPingSegments(
 assert.strictEqual(segments.badge, '🟢');
 assert.strictEqual(segments.wsText, '42ms');
 assert.strictEqual(segments.ref, '456789');
+assert.strictEqual(segments.scope, 'dm');
 assert.strictEqual(segments.at, '2026-01-01T00:00:00.000Z');
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
@@ -84,7 +87,7 @@ assert.ok(
 assert.ok(
   cmd
     .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
-    .includes('Latency: n/a | WS: n/a | Tier: unknown | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
+    .includes('Latency: n/a | WS: n/a | Tier: unknown | Scope: dm | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
   'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
@@ -107,6 +110,7 @@ assert.ok(
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
   assert.ok(payload.content.includes('Tier: good'), 'ping reply should include latency tier label');
+  assert.ok(payload.content.includes('Scope: dm'), 'ping reply should include interaction scope label');
   assert.ok(payload.content.includes('Ref: 456789'), 'ping reply should include short interaction reference');
   assert.ok(/\| At: .*Z$/.test(payload.content), 'ping reply should include ISO timestamp');
 

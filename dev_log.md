@@ -1922,3 +1922,23 @@ File Diubah:
 Deskripsi: Menambahkan log konteks bootstrap (`guild_mode` dan `token_present`) tepat sebelum proses registrasi slash command. Ini membantu troubleshooting startup tanpa perlu menebak mode registrasi yang sedang dipakai.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menambahkan `clientId_present` ke context log agar diagnosis konfigurasi startup makin lengkap.
+
+[ITERATION AUTO #101]
+Tanggal: 2026-03-03T07:48:10.323Z
+Jenis Perubahan: Logging Improvement
+Deskripsi: Logging Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #102]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Menambahkan scope konteks interaction pada output /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan field `Scope` pada /ping (`guild` atau `dm`) untuk memberi konteks asal interaction saat troubleshooting. Perubahan disertai helper `getScopeLabel()` dan update coverage test pada builder segment/payload.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menambahkan scope `thread` di masa depan jika command mulai dipakai lintas channel/thread secara intensif.
