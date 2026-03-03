@@ -119,9 +119,12 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
   };
 }
 
+function formatPingSummary(segments) {
+  return `🏓 Pong! ${segments.badge} Latency: ${segments.latencyText} | WS: ${segments.wsText} | Delta: ${segments.deltaText} | Tier: ${segments.tier} | Scope: ${segments.scope} | Ref: ${segments.ref} | At: ${segments.at}`;
+}
+
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
-  const s = buildPingSegments(interaction, client, nowIso);
-  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Delta: ${s.deltaText} | Tier: ${s.tier} | Scope: ${s.scope} | Ref: ${s.ref} | At: ${s.at}`;
+  return formatPingSummary(buildPingSegments(interaction, client, nowIso));
 }
 
 module.exports = {
