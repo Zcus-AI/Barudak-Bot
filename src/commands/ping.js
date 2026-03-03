@@ -1,11 +1,7 @@
 const { getInteractionLatencyMs } = require('../utils/metrics-format');
 
 function getWebsocketPingMs(client) {
-  const wsPing = Number(client?.ws?.ping);
-  if (!Number.isFinite(wsPing) || wsPing < 0) {
-    return null;
-  }
-  return Math.floor(wsPing);
+  return normalizePingMs(client?.ws?.ping);
 }
 
 const LATENCY_BADGES = {

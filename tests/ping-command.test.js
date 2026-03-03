@@ -8,6 +8,7 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 42.9 } }), 42);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 'invalid' } }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: -5 } }), null);
+assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: '   ' } }), null);
 assert.strictEqual(cmd.normalizePingMs(50.8), 50);
 assert.strictEqual(cmd.normalizePingMs('invalid'), null);
 assert.strictEqual(cmd.normalizePingMs(-1), null);

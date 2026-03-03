@@ -1170,3 +1170,23 @@ File Diubah:
 Deskripsi: Merapikan `getLatencyTier()` dengan mengganti rantai `if` menjadi mapping `LATENCY_TIER_BY_BADGE`. Refactor ini membuat relasi badge→tier lebih deklaratif, memudahkan maintenance, dan tetap mempertahankan behavior output yang sama.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan satukan semua konstanta ping (badge/threshold/tier label) ke satu blok konfigurasi agar perubahan rule lebih sederhana.
+
+[ITERATION AUTO #7]
+Tanggal: 2026-03-03T05:14:07.116Z
+Jenis Perubahan: Refactor Improvement
+Deskripsi: Refactor Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #81]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi whitespace websocket ping pada /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menyatukan normalisasi nilai websocket ping ke `normalizePingMs()` sehingga input whitespace (`'   '`) tidak lagi tercoerce menjadi `0ms`. Ditambahkan unit test untuk memastikan nilai whitespace diperlakukan sebagai invalid (`null`).
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan memakai normalisasi terpusat untuk seluruh input numerik command agar edge-case coercion seragam.
