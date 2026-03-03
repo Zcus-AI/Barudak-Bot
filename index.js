@@ -8,11 +8,16 @@ const CooldownManager = require('./src/utils/cooldown');
 const AutonomousEngine = require('./src/dev/autonomousEngine');
 
 function readControl() {
+  const controlPath = path.join(__dirname, 'control.json');
   try {
-    const raw = fs.readFileSync(path.join(__dirname, 'control.json'), 'utf8');
+    const raw = fs.readFileSync(controlPath, 'utf8');
     return JSON.parse(raw);
   } catch (error) {
-    logger.warn('control.json tidak terbaca, fallback autonomous_mode=false');
+    if (error?.code === 'ENOENT') {
+      logger.warn('control.json tidak ditemukan, fallback autonomous_mode=false');
+    } else {
+      logger.error('control.json gagal dibaca/parse, fallback autonomous_mode=false', error);
+    }
     return { autonomous_mode: false };
   }
 }

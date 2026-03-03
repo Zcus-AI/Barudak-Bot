@@ -584,3 +584,16 @@ File Diubah:
 Deskripsi: Menambahkan `normalizeIsoTimestamp()` agar parameter timestamp pada `buildPingMessage()` tervalidasi (string kosong/invalid otomatis fallback ke waktu saat ini). Ini mencegah output /ping memuat nilai waktu yang malformed ketika fungsi dipanggil dengan input tidak valid.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi serupa pada helper message builder lain bila menerima parameter opsional eksternal.
+
+[ITERATION #44]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Hardening pembacaan control.json saat bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Memperbaiki error handling `readControl()` agar membedakan kasus file tidak ditemukan (warning) dan file rusak/gagal parse (error lengkap). Sistem tetap fallback ke `autonomous_mode=false` tanpa menghentikan startup flow.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah validasi struktur isi control.json (tipe boolean) agar fallback lebih presisi saat field malformed.
