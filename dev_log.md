@@ -18,3 +18,17 @@ File Diubah:
 Deskripsi: Menambahkan cooldown per-command agar spam command berkurang dan bot lebih stabil.
 Status Runtime: Siap dijalankan (npm start)
 Next Plan: Tambah fitur moderation sederhana (warn/timeout) dengan penyimpanan in-memory ringan.
+
+[ITERATION #3]
+Tanggal: 2026-03-03
+Jenis Perubahan: Security & Stability Review
+Fitur: Hardening interaction error-path + cooldown pruning
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- src/utils/cooldown.js
+- tests/cooldown.test.js
+Deskripsi: Menutup celah error race saat interaction reply/followUp dan menambahkan pruning cooldown agar map tidak tumbuh tanpa batas.
+Status Runtime: Lolos syntax check + test cooldown
+Next Plan: Lanjut moderation command ringan dengan permission check eksplisit.

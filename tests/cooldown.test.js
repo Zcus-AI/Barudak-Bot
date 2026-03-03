@@ -11,4 +11,7 @@ const second = manager.check(key, 1000);
 assert.strictEqual(second.allowed, false, 'Second request should be blocked by cooldown');
 assert.ok(second.retryAfterMs > 0, 'Retry time should be greater than 0');
 
+const zeroCooldown = manager.check('zero:user123', -100);
+assert.strictEqual(zeroCooldown.allowed, true, 'Negative cooldown should be normalized to 0');
+
 console.log('cooldown.test.js passed');
