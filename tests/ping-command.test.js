@@ -30,6 +30,15 @@ assert.strictEqual(cmd.getLatencyTier(500), 'poor');
 assert.strictEqual(cmd.getLatencyTier(null), 'unknown');
 assert.strictEqual(cmd.getInteractionRef({ id: '1234567890' }), '567890');
 assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
+const segments = cmd.buildPingSegments(
+  { id: 'abc123456789', createdTimestamp: Date.now() - 100 },
+  { ws: { ping: 42 } },
+  '2026-01-01T00:00:00.000Z'
+);
+assert.strictEqual(segments.badge, '🟢');
+assert.strictEqual(segments.wsText, '42ms');
+assert.strictEqual(segments.ref, '456789');
+assert.strictEqual(segments.at, '2026-01-01T00:00:00.000Z');
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);

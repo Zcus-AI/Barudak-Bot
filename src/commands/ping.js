@@ -86,11 +86,21 @@ function getInteractionRef(interaction) {
   return raw.slice(-6);
 }
 
-function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
+function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
   const metrics = getPingMetrics(interaction, client);
-  const safeIsoNow = normalizeIsoTimestamp(nowIso);
-  const ref = getInteractionRef(interaction);
-  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | Tier: ${metrics.tier} | Ref: ${ref} | At: ${safeIsoNow}`;
+  return {
+    badge: metrics.badge,
+    latencyText: formatMs(metrics.latencyMs),
+    wsText: formatMs(metrics.wsPingMs),
+    tier: metrics.tier,
+    ref: getInteractionRef(interaction),
+    at: normalizeIsoTimestamp(nowIso)
+  };
+}
+
+function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
+  const s = buildPingSegments(interaction, client, nowIso);
+  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Tier: ${s.tier} | Ref: ${s.ref} | At: ${s.at}`;
 }
 
 module.exports = {
@@ -106,6 +116,7 @@ module.exports = {
   getLatencyTier,
   getPingMetrics,
   getInteractionRef,
+  buildPingSegments,
   normalizeIsoTimestamp,
   buildPingMessage,
   async execute(interaction, client) {
