@@ -175,11 +175,53 @@ async function testBenignAlreadyAcknowledgedFollowUpErrorDoesNotThrow() {
   await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
 }
 
+async function testInvalidCommandNameIsIgnoredSafely() {
+  let executed = false;
+  const interaction = {
+    commandName: '   ',
+    user: { id: 'user-6' },
+    isChatInputCommand: () => true,
+    replied: false,
+    deferred: false,
+    reply: async () => {
+      throw new Error('reply should not be called');
+    }
+  };
+
+  const client = {
+    commands: new Map([
+      ['ping', { execute: async () => { executed = true; } }]
+    ]),
+    cooldowns: {}
+  };
+
+  await interactionEvent.execute(interaction, client);
+  assert.strictEqual(executed, false, 'Invalid commandName should be ignored');
+}
+
+async function testMissingCommandRegistryIsIgnoredSafely() {
+  const interaction = {
+    commandName: 'ping',
+    user: { id: 'user-7' },
+    isChatInputCommand: () => true,
+    replied: false,
+    deferred: false,
+    reply: async () => {
+      throw new Error('reply should not be called');
+    }
+  };
+
+  const client = { cooldowns: {} };
+  await assert.doesNotReject(() => interactionEvent.execute(interaction, client));
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
   await testBenignUnknownInteractionErrorDoesNotThrow();
   await testDeferredInteractionUsesFollowUpOnError();
   await testBenignAlreadyAcknowledgedFollowUpErrorDoesNotThrow();
+  await testInvalidCommandNameIsIgnoredSafely();
+  await testMissingCommandRegistryIsIgnoredSafely();
   console.log('interaction-create.test.js passed');
 })();

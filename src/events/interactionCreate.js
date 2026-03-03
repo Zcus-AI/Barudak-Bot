@@ -45,6 +45,16 @@ module.exports = {
     try {
       if (!interaction.isChatInputCommand()) return;
 
+      if (!client?.commands || typeof client.commands.get !== 'function') {
+        logger.warn('Lewati interaction: client.commands tidak valid');
+        return;
+      }
+
+      if (typeof interaction.commandName !== 'string' || !interaction.commandName.trim()) {
+        logger.warn('Lewati interaction: commandName tidak valid');
+        return;
+      }
+
       const command = client.commands.get(interaction.commandName);
       if (!command) {
         logger.warn(`Command /${interaction.commandName} tidak ditemukan di registry`);

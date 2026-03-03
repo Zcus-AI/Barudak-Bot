@@ -244,3 +244,17 @@ File Diubah:
 Deskripsi: Refactor `interactionCreate` dengan mengekstrak helper `getCooldownAdapters` dan `sendCommandExecutionError`, serta konstanta pesan error command. Tujuan: mengurangi duplikasi logika, membuat alur utama lebih ringkas, dan mempermudah maintenance tanpa mengubah behavior existing.
 Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
 Next Plan: Rapikan unit test interaction agar reusable helper assertion bisa dipakai lintasan skenario lain.
+
+[ITERATION #19]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Guard validasi command metadata pada interaction runtime
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan validasi defensif agar interaction di-skip aman ketika `client.commands` tidak valid atau `interaction.commandName` kosong/non-string. Ditambah 2 unit test untuk memastikan kedua skenario ini tidak melempar error dan tidak mengeksekusi command.
+Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
+Next Plan: Tambah validasi ringan untuk payload command response agar error log lebih spesifik saat reply API reject.
