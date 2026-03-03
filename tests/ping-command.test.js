@@ -28,6 +28,8 @@ assert.strictEqual(cmd.getLatencyTier(50), 'good');
 assert.strictEqual(cmd.getLatencyTier(180), 'medium');
 assert.strictEqual(cmd.getLatencyTier(500), 'poor');
 assert.strictEqual(cmd.getLatencyTier(null), 'unknown');
+assert.strictEqual(cmd.getInteractionRef({ id: '1234567890' }), '567890');
+assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
@@ -67,13 +69,14 @@ assert.ok(
 assert.ok(
   cmd
     .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
-    .includes('Latency: n/a | WS: n/a | Tier: unknown | At: 2026-01-01T00:00:00.000Z'),
+    .includes('Latency: n/a | WS: n/a | Tier: unknown | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
   'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
 (async () => {
   let payload = null;
   const interaction = {
+    id: 'abc123456789',
     createdTimestamp: Date.now() - 123,
     reply: async (data) => {
       payload = data;
@@ -89,6 +92,7 @@ assert.ok(
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
   assert.ok(payload.content.includes('Tier: good'), 'ping reply should include latency tier label');
+  assert.ok(payload.content.includes('Ref: 456789'), 'ping reply should include short interaction reference');
   assert.ok(/\| At: .*Z$/.test(payload.content), 'ping reply should include ISO timestamp');
 
   let invalidPayload = null;

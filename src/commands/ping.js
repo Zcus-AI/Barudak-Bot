@@ -80,10 +80,17 @@ function getPingMetrics(interaction, client) {
   };
 }
 
+function getInteractionRef(interaction) {
+  const raw = String(interaction?.id || '').trim();
+  if (!raw) return 'n/a';
+  return raw.slice(-6);
+}
+
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
   const metrics = getPingMetrics(interaction, client);
   const safeIsoNow = normalizeIsoTimestamp(nowIso);
-  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | Tier: ${metrics.tier} | At: ${safeIsoNow}`;
+  const ref = getInteractionRef(interaction);
+  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | Tier: ${metrics.tier} | Ref: ${ref} | At: ${safeIsoNow}`;
 }
 
 module.exports = {
@@ -98,6 +105,7 @@ module.exports = {
   getLatencyBadge,
   getLatencyTier,
   getPingMetrics,
+  getInteractionRef,
   normalizeIsoTimestamp,
   buildPingMessage,
   async execute(interaction, client) {
