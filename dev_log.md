@@ -610,3 +610,16 @@ File Diubah:
 Deskripsi: Menambahkan cakupan test untuk `normalizeIsoTimestamp()` pada kasus string tanggal valid non-kanonik, string whitespace, dan nilai null. Tujuannya memastikan fallback timestamp tetap aman dan konsisten di berbagai input edge-case.
 Status Runtime: Lolos seluruh test utama (ping, metrics-format, uptime, cooldown, interaction-create).
 Next Plan: Tambah test untuk helper bootstrap (readControl/registerCommands) agar jalur fallback lebih terukur.
+
+[ITERATION #46]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Logging ringkas command aktif + jumlah register command
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan log daftar command aktif setelah loader selesai (`Command aktif: ...`) dan menambahkan metadata `total=<n>` pada log sukses registrasi slash command (guild/global). Ini mempermudah audit startup dan verifikasi command yang benar-benar terpasang.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan sampling log untuk event loader agar startup log tetap ringkas pada project besar.

@@ -44,6 +44,7 @@ function loadCommands(client) {
   const commandsPath = path.join(__dirname, 'src', 'commands');
   const files = safeReadJsFiles(commandsPath, 'commands');
   const payload = [];
+  const loadedNames = [];
   let loaded = 0;
   let skipped = 0;
 
@@ -74,10 +75,14 @@ function loadCommands(client) {
 
     client.commands.set(commandName, command);
     payload.push({ ...command.data, name: commandName });
+    loadedNames.push(commandName);
     loaded += 1;
   }
 
   logger.info(`Command loader: loaded=${loaded} skipped=${skipped} total=${files.length}`);
+  if (loadedNames.length > 0) {
+    logger.info(`Command aktif: ${loadedNames.join(', ')}`);
+  }
   return payload;
 }
 
@@ -126,10 +131,10 @@ async function registerCommands(commandData) {
   try {
     if (config.guildId) {
       await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commandData });
-      logger.info('Slash command terdaftar di guild (dev mode).');
+      logger.info(`Slash command terdaftar di guild (dev mode). total=${commandData.length}`);
     } else {
       await rest.put(Routes.applicationCommands(config.clientId), { body: commandData });
-      logger.info('Slash command terdaftar secara global.');
+      logger.info(`Slash command terdaftar secara global. total=${commandData.length}`);
     }
     return true;
   } catch (error) {
