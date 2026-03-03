@@ -56,7 +56,9 @@ async function sendCooldownReply(interaction, commandName, retrySeconds) {
 module.exports = {
   name: 'interactionCreate',
   async execute(interaction, client) {
-    const commandName = interaction?.commandName || 'unknown';
+    const commandNameRaw = interaction?.commandName;
+    const commandName =
+      typeof commandNameRaw === 'string' && commandNameRaw.trim() ? commandNameRaw.trim() : 'unknown';
 
     try {
       if (!interaction.isChatInputCommand()) return;

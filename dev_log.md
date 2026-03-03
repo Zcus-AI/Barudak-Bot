@@ -691,3 +691,16 @@ File Diubah:
 Deskripsi: Menambahkan test `testCommandNameWithSpacesIsNormalized()` untuk memastikan commandName dengan spasi di kiri/kanan tetap di-trim dan berhasil mengeksekusi command yang terdaftar. Ini mengunci behavior refactor normalisasi commandName agar tidak regresi.
 Status Runtime: Lolos seluruh test utama (interaction-create, cooldown, uptime, ping, metrics-format).
 Next Plan: Tambah test untuk verifikasi log/prefix commandName agar output log konsisten pasca normalisasi.
+
+[ITERATION #52]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Normalisasi nama command pada log interaction
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menormalisasi `commandName` (trim) di awal handler untuk dipakai pada semua log sukses/error, sehingga log tidak lagi menampilkan nama command dengan spasi berlebih (mis. `/  ping  `). Ini meningkatkan keterbacaan dan konsistensi observability.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah helper prefix log command terstandar agar format log lintas event lebih seragam.
