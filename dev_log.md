@@ -1903,3 +1903,22 @@ Tanggal: 2026-03-03T07:43:08.135Z
 Jenis Perubahan: Error Handling Improvement
 Deskripsi: Error Handling Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
 Status: Completed
+
+[ITERATION AUTO #100]
+Tanggal: 2026-03-03T07:45:26.670Z
+Jenis Perubahan: Testing Improvement
+Deskripsi: Testing Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #101]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Bootstrap context log sebelum registrasi command
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan log konteks bootstrap (`guild_mode` dan `token_present`) tepat sebelum proses registrasi slash command. Ini membantu troubleshooting startup tanpa perlu menebak mode registrasi yang sedang dipakai.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menambahkan `clientId_present` ke context log agar diagnosis konfigurasi startup makin lengkap.

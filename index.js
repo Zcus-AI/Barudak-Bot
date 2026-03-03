@@ -238,6 +238,7 @@ async function bootstrap() {
   process.on('unhandledRejection', (err) => logger.error('Unhandled Rejection', err));
   process.on('uncaughtException', (err) => logger.error('Uncaught Exception', err));
 
+  logger.info(`Bootstrap context: guild_mode=${config.guildId ? 'guild' : 'global'} token_present=${Boolean(config.token)}`);
   const registerOk = await registerCommands(commandData);
   if (!registerOk) {
     logger.warn('Registrasi slash command tidak sepenuhnya berhasil; bot tetap melanjutkan proses login.');
