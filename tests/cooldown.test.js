@@ -31,4 +31,9 @@ assert.strictEqual(manager.size, 2, 'pruneExpired should remove only expired key
 assert.strictEqual(manager.cooldowns.has('temp:a'), false, 'Expired key should be removed by pruneExpired');
 assert.strictEqual(manager.cooldowns.has('temp:b'), true, 'Non-expired key should remain after pruneExpired');
 
+const invalidNowFirst = manager.check('invalid-now:user', 1000, Number.NaN);
+assert.strictEqual(invalidNowFirst.allowed, true, 'Invalid now input should fallback safely');
+const invalidNowSecond = manager.check('invalid-now:user', 1000, undefined);
+assert.strictEqual(invalidNowSecond.allowed, false, 'Fallback now should still enforce cooldown');
+
 console.log('cooldown.test.js passed');

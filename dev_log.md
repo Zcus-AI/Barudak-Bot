@@ -325,3 +325,17 @@ File Diubah:
 Deskripsi: Mengekstrak logic formatter duration/bytes dan perhitungan latency interaction ke util bersama `metrics-format`, lalu command `/ping` dan `/uptime` memakai util tersebut. Ini mengurangi duplikasi dan memudahkan maintainability tanpa mengubah perilaku command.
 Status Runtime: Lolos syntax check + test (metrics-format, ping, uptime, cooldown, interaction-create)
 Next Plan: Rapikan test command agar memanfaatkan util test helper yang reusable untuk verifikasi payload interaction.
+
+[ITERATION #25]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi defensif parameter waktu pada CooldownManager
+File Dibuat:
+- (none)
+File Diubah:
+- src/utils/cooldown.js
+- tests/cooldown.test.js
+- dev_log.md
+Deskripsi: Menambahkan normalisasi `now` di CooldownManager agar input waktu invalid (NaN/undefined/negatif) tidak merusak perhitungan cooldown/pruning. Ditambah test untuk memastikan fallback waktu aman tetap mempertahankan behavior cooldown.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah validasi ringan pada input key/cooldown untuk melaporkan pola misuse di log debug bila dibutuhkan.

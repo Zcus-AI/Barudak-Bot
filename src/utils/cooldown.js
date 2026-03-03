@@ -15,9 +15,16 @@ class CooldownManager {
     return String(key).trim();
   }
 
+  normalizeNow(now) {
+    const parsed = Number(now);
+    if (!Number.isFinite(parsed) || parsed < 0) return Date.now();
+    return parsed;
+  }
+
   pruneExpired(now = Date.now()) {
+    const safeNow = this.normalizeNow(now);
     for (const [key, expiresAt] of this.cooldowns.entries()) {
-      if (expiresAt <= now) this.cooldowns.delete(key);
+      if (expiresAt <= safeNow) this.cooldowns.delete(key);
     }
   }
 
@@ -26,6 +33,7 @@ class CooldownManager {
   }
 
   check(key, cooldownMs, now = Date.now()) {
+    const safeNow = this.normalizeNow(now);
     const safeKey = this.normalizeKey(key);
     const safeCooldown = this.normalizeCooldownMs(cooldownMs);
 
@@ -38,7 +46,7 @@ class CooldownManager {
 
     this.checkCount += 1;
     if (this.checkCount % 100 === 0) {
-      this.pruneExpired(now);
+      this.pruneExpired(safeNow);
     }
 
     if (safeCooldown === 0) {
@@ -47,14 +55,14 @@ class CooldownManager {
     }
 
     const expiresAt = this.cooldowns.get(safeKey) || 0;
-    if (expiresAt > now) {
+    if (expiresAt > safeNow) {
       return {
         allowed: false,
-        retryAfterMs: expiresAt - now
+        retryAfterMs: expiresAt - safeNow
       };
     }
 
-    this.cooldowns.set(safeKey, now + safeCooldown);
+    this.cooldowns.set(safeKey, safeNow + safeCooldown);
     return { allowed: true, retryAfterMs: 0 };
   }
 }
