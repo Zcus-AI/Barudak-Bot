@@ -28,7 +28,8 @@ function buildUptimeMessage(runtime = process) {
   const rssText = formatBytes(memoryUsage?.rss);
   const runtimeText = formatRuntimeInfo(runtime);
   const nodeVersion = runtime?.version || process.version;
-  const arch = String(runtime?.arch || process.arch);
+  const rawArch = String(runtime?.arch || process.arch).trim();
+  const arch = rawArch || process.arch;
 
   const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
 

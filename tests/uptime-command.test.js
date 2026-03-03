@@ -55,6 +55,10 @@ assert.ok(
   'buildUptimeMessage should fallback to process.arch when runtime.arch is missing'
 );
 assert.ok(
+  cmd.buildUptimeMessage({ platform: 'linux', pid: 777, arch: '   ' }).includes(`🏗️ Arch: ${process.arch}`),
+  'buildUptimeMessage should fallback to process.arch when runtime.arch is whitespace'
+);
+assert.ok(
   cmd
     .buildUptimeMessage({
       uptime: () => {

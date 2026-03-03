@@ -811,3 +811,17 @@ File Diubah:
 Deskripsi: Merapikan builder /uptime dengan mengekstrak label teks ke konstanta `UPTIME_LABELS` dan menyusun output melalui array + join. Perubahan ini mengurangi hardcoded string berulang dan memudahkan maintenance/penyesuaian label di satu titik.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan ekstraksi konstanta label serupa untuk command /ping agar konsistensi format output makin baik.
+
+[ITERATION #61]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi nilai arsitektur runtime pada builder /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan normalisasi nilai `arch` di `buildUptimeMessage()` agar input kosong/whitespace tidak menghasilkan output `Arch` yang kosong. Builder kini fallback aman ke `process.arch` pada kasus tersebut.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan validasi serupa untuk field metadata lain (mis. version) agar output runtime tetap konsisten pada input anomali.
