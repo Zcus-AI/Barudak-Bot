@@ -851,3 +851,16 @@ File Diubah:
 Deskripsi: Menambahkan unit test edge-case untuk `buildUptimeMessage()` agar memverifikasi nilai uptime negatif di-clamp menjadi `UptimeSec: 0` dan nilai RSS invalid disanitasi menjadi `0 B`. Ini memperkuat jaminan output tetap valid pada input runtime yang buruk.
 Status Runtime: Lolos seluruh test utama (uptime, cooldown, interaction-create, ping, metrics-format).
 Next Plan: Tambah test terisolasi helper control/config normalization saat memungkinkan export helper bootstrap.
+
+[ITERATION #64]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Logging daftar event aktif saat startup
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan log `Event aktif: ...` setelah event loader selesai untuk menampilkan event yang benar-benar terdaftar (dengan penanda `(once)` jika relevan). Ini melengkapi observability startup agar setara dengan daftar command aktif.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan mode ringkas log startup untuk environment produksi dengan noise minimal.

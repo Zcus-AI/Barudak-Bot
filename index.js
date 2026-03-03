@@ -104,6 +104,7 @@ function loadCommands(client) {
 function loadEvents(client) {
   const eventsPath = path.join(__dirname, 'src', 'events');
   const files = safeReadJsFiles(eventsPath, 'events');
+  const loadedNames = [];
   let loaded = 0;
   let skipped = 0;
 
@@ -125,10 +126,14 @@ function loadEvents(client) {
     } else {
       client.on(event.name, (...args) => event.execute(...args, client));
     }
+    loadedNames.push(`${event.name}${event.once ? '(once)' : ''}`);
     loaded += 1;
   }
 
   logger.info(`Event loader: loaded=${loaded} skipped=${skipped} total=${files.length}`);
+  if (loadedNames.length > 0) {
+    logger.info(`Event aktif: ${loadedNames.join(', ')}`);
+  }
 }
 
 async function registerCommands(commandData) {
