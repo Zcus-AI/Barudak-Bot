@@ -15,9 +15,12 @@ module.exports = {
       if (!interaction.isChatInputCommand()) return;
 
       const command = client.commands.get(interaction.commandName);
-      if (!command) return;
+      if (!command) {
+        logger.warn(`Command /${interaction.commandName} tidak ditemukan di registry`);
+        return;
+      }
       if (typeof command.execute !== 'function') {
-        logger.warn('Invalid command handler format');
+        logger.warn(`Invalid command handler format untuk /${interaction.commandName}`);
         return;
       }
 
@@ -41,6 +44,9 @@ module.exports = {
           const check = cooldownCheck(key, cooldownMs);
           if (!check.allowed) {
             const retry = Math.max(1, Math.ceil(check.retryAfterMs / 1000));
+            logger.info(
+              `Cooldown block /${interaction.commandName} user:${userId} retry_after:${retry}s`
+            );
             if (!interaction.replied && !interaction.deferred) {
               await interaction.reply({
                 content: `⏳ Tunggu ${retry} detik sebelum memakai command ini lagi.`,

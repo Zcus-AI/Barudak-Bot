@@ -204,3 +204,16 @@ File Diubah:
 Deskripsi: Menambahkan cakupan test untuk error path yang sebelumnya belum terverifikasi: (1) interaction deferred wajib memakai followUp saat command gagal, (2) followUp yang gagal dengan kode benign 40060 tidak melempar error ke caller. Ini menjaga behavior handler tetap stabil pada kondisi race/acknowledgement Discord API.
 Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
 Next Plan: Tambah test command loader untuk skenario command invalid format agar warning path tetap aman.
+
+[ITERATION #16]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Interaction command-path observability logs
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menambahkan logging kontekstual pada event interaction: warning saat command tidak ditemukan/handler invalid dengan nama command eksplisit, serta info log saat request diblok cooldown (menyertakan command, user id, dan retry seconds). Tujuannya mempercepat debugging produksi tanpa mengubah perilaku command.
+Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
+Next Plan: Tambah logging ringkas pada command execute success/failure latency untuk profiling ringan.
