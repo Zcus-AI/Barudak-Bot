@@ -39,7 +39,7 @@ async function sendCommandExecutionError(interaction, commandName) {
     if (isBenignInteractionResponseError(replyError)) {
       logger.info(`Skip kirim error response ${commandLabel(commandName)} (interaction sudah tidak valid)`);
     } else {
-      logger.warn('Gagal mengirim error response interaction', replyError);
+      logger.warn(`Gagal mengirim error response interaction ${commandLabel(commandName)}`, replyError);
     }
   }
 }
