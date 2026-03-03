@@ -366,3 +366,16 @@ File Diubah:
 Deskripsi: Menambahkan test edge-case untuk formatter metrics (nilai negatif/0 dan konversi MB) serta verifikasi command /ping menampilkan latency numerik saat timestamp valid dan fallback `n/a` saat timestamp invalid.
 Status Runtime: Lolos seluruh test utama (metrics-format, ping, cooldown, interaction-create, uptime).
 Next Plan: Tambah test bootstrap helper agar skenario register command gagal terverifikasi tanpa perlu network call.
+
+[ITERATION #28]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Logging durasi eksekusi command interaction
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menambahkan info log setelah command berhasil dieksekusi untuk mencatat lama proses (`elapsedMs`). Ini membantu profiling ringan command yang lambat tanpa mengubah behavior command existing.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah logging warning khusus untuk command execution di atas threshold tertentu (mis. >1000ms).

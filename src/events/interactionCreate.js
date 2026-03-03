@@ -88,7 +88,10 @@ module.exports = {
         }
       }
 
+      const startedAt = Date.now();
       await command.execute(interaction, client);
+      const elapsedMs = Date.now() - startedAt;
+      logger.info(`Command /${commandName} selesai dalam ${elapsedMs}ms`);
     } catch (error) {
       logger.error(`Gagal jalankan /${commandName}`, error);
       await sendCommandExecutionError(interaction, commandName);
