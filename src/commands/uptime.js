@@ -20,18 +20,24 @@ function safeRuntimeCall(runtime, fnName, fallbackValue) {
   return fallbackValue;
 }
 
+function getRuntimeMeta(runtime = process) {
+  const nodeVersion = runtime?.version || process.version;
+  const rawArch = String(runtime?.arch || process.arch).trim();
+  return {
+    runtimeText: formatRuntimeInfo(runtime),
+    nodeVersion,
+    arch: rawArch || process.arch
+  };
+}
+
 function buildUptimeMessage(runtime = process) {
   const uptimeSeconds = safeRuntimeCall(runtime, 'uptime', process.uptime());
   const memoryUsage = safeRuntimeCall(runtime, 'memoryUsage', process.memoryUsage());
 
   const uptimeText = formatDuration(uptimeSeconds);
   const rssText = formatBytes(memoryUsage?.rss);
-  const runtimeText = formatRuntimeInfo(runtime);
-  const nodeVersion = runtime?.version || process.version;
-  const rawArch = String(runtime?.arch || process.arch).trim();
-  const arch = rawArch || process.arch;
-
   const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
+  const { runtimeText, nodeVersion, arch } = getRuntimeMeta(runtime);
 
   return [
     `${UPTIME_LABELS.uptime}: ${uptimeText}`,

@@ -944,3 +944,16 @@ File Diubah:
 Deskripsi: Menambahkan unit test untuk edge-case metrik ping: websocket ping negatif harus dianggap invalid (`null`) dan `normalizePingMs('')` harus fallback ke `null`. Ini memperkuat jaminan bahwa klasifikasi badge tidak salah pada input kosong/invalid.
 Status Runtime: Lolos seluruh test utama (ping, uptime, cooldown, interaction-create, metrics-format).
 Next Plan: Tambahkan test batas threshold badge (tepat 100ms/250ms) agar regresi batas klasifikasi mudah terdeteksi.
+
+[ITERATION #70]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Ekstraksi metadata runtime pada builder /uptime
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- dev_log.md
+Deskripsi: Merapikan `buildUptimeMessage()` dengan mengekstrak logika metadata runtime ke helper `getRuntimeMeta()`. Refactor ini mengurangi kepadatan fungsi utama dan menjaga tanggung jawab formatting metadata tetap terpusat tanpa mengubah output command.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan ekstraksi helper sanitasi numerik agar dapat dipakai bersama antara command uptime dan ping.
