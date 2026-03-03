@@ -251,7 +251,11 @@ async function bootstrap() {
     throw error;
   }
 
-  await runAutonomousIteration();
+  try {
+    await runAutonomousIteration();
+  } catch (error) {
+    logger.error('Autonomous iteration gagal, bot tetap berjalan.', error);
+  }
 }
 
 bootstrap().catch((error) => {
