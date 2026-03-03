@@ -176,7 +176,10 @@ async function bootstrap() {
   process.on('unhandledRejection', (err) => logger.error('Unhandled Rejection', err));
   process.on('uncaughtException', (err) => logger.error('Uncaught Exception', err));
 
-  await registerCommands(commandData);
+  const registerOk = await registerCommands(commandData);
+  if (!registerOk) {
+    logger.warn('Registrasi slash command tidak sepenuhnya berhasil; bot tetap melanjutkan proses login.');
+  }
 
   if (!config.token) {
     logger.error('DISCORD_TOKEN belum diisi di environment.');

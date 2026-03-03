@@ -530,3 +530,16 @@ File Diubah:
 Deskripsi: Menambahkan test tambahan untuk `formatRuntimeInfo()` pada kasus PID negatif (fallback ke `process.pid`) dan PID floating-point (dibulatkan ke bawah). Ini memperkuat jaminan output runtime tetap konsisten di edge-case input.
 Status Runtime: Lolos seluruh test utama (metrics-format, ping, uptime, cooldown, interaction-create).
 Next Plan: Tambah test terisolasi helper bootstrap agar skenario filesystem/read error tidak hanya tervalidasi lewat runtime umum.
+
+[ITERATION #40]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Logging status hasil registrasi slash command saat bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan warning log eksplisit ketika `registerCommands()` gagal/skip sehingga startup log lebih informatif: bot tetap login, namun operator langsung tahu bahwa registrasi slash command tidak sepenuhnya berhasil.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambahkan kategori reason singkat pada return status register command untuk membedakan skip karena config kosong vs gagal API.
