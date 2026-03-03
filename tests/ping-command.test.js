@@ -7,6 +7,11 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: Date.now() - 250 }) >= 0
 assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 42.9 } }), 42);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 'invalid' } }), null);
+assert.strictEqual(
+  cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
+  '2026-01-01T00:00:00.000Z'
+);
+assert.ok(/\d{4}-\d{2}-\d{2}T/.test(cmd.normalizeIsoTimestamp('invalid-date')));
 assert.ok(
   cmd.buildPingMessage({ createdTimestamp: Date.now() - 25 }, { ws: { ping: 10 } }, '2026-01-01T00:00:00.000Z').includes('WS: 10ms'),
   'buildPingMessage should include websocket ping in ms format'

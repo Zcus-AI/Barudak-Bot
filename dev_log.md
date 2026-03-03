@@ -570,3 +570,17 @@ File Diubah:
 Deskripsi: Merapikan `interactionCreate` dengan menormalkan `interaction.commandName` sekali ke variabel lokal `interactionCommandName`, lalu dipakai konsisten pada lookup, cooldown key, dan logging. Mengurangi pengulangan akses properti serta mencegah mismatch akibat whitespace tanpa mengubah behavior command.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan helper kecil untuk membuat prefix log command agar format log lebih konsisten lintas path sukses/error/cooldown.
+
+[ITERATION #43]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Validasi timestamp injeksi pada builder /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan `normalizeIsoTimestamp()` agar parameter timestamp pada `buildPingMessage()` tervalidasi (string kosong/invalid otomatis fallback ke waktu saat ini). Ini mencegah output /ping memuat nilai waktu yang malformed ketika fungsi dipanggil dengan input tidak valid.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Tambah validasi serupa pada helper message builder lain bila menerima parameter opsional eksternal.
