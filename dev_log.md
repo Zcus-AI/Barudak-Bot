@@ -557,3 +557,16 @@ File Diubah:
 Deskripsi: Menambahkan informasi waktu respons (`At: <ISO timestamp>`) pada output /ping agar memudahkan verifikasi waktu reply bot saat troubleshooting. Builder pesan /ping kini menerima timestamp injeksi untuk test deterministik.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan opsi mode ringkas untuk /ping agar bisa menonaktifkan detail timestamp saat tidak dibutuhkan.
+
+[ITERATION #42]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Normalisasi commandName lokal di interaction handler
+File Dibuat:
+- (none)
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Merapikan `interactionCreate` dengan menormalkan `interaction.commandName` sekali ke variabel lokal `interactionCommandName`, lalu dipakai konsisten pada lookup, cooldown key, dan logging. Mengurangi pengulangan akses properti serta mencegah mismatch akibat whitespace tanpa mengubah behavior command.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan helper kecil untuk membuat prefix log command agar format log lebih konsisten lintas path sukses/error/cooldown.

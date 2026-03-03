@@ -71,13 +71,14 @@ module.exports = {
         return;
       }
 
-      const command = client.commands.get(interaction.commandName);
+      const interactionCommandName = interaction.commandName.trim();
+      const command = client.commands.get(interactionCommandName);
       if (!command) {
-        logger.warn(`Command /${interaction.commandName} tidak ditemukan di registry`);
+        logger.warn(`Command /${interactionCommandName} tidak ditemukan di registry`);
         return;
       }
       if (typeof command.execute !== 'function') {
-        logger.warn(`Invalid command handler format untuk /${interaction.commandName}`);
+        logger.warn(`Invalid command handler format untuk /${interactionCommandName}`);
         return;
       }
 
@@ -86,15 +87,15 @@ module.exports = {
       if (cooldownMs > 0) {
         const userId = interaction.user?.id;
         if (!userId) {
-          logger.warn(`Lewati cooldown /${interaction.commandName} karena user id tidak tersedia`);
+          logger.warn(`Lewati cooldown /${interactionCommandName} karena user id tidak tersedia`);
         } else {
-          const key = `${interaction.commandName}:${userId}`;
+          const key = `${interactionCommandName}:${userId}`;
           const check = cooldown.check(key, cooldownMs);
           if (!check.allowed) {
             const retry = Math.max(1, Math.ceil(check.retryAfterMs / 1000));
-            logger.info(`Cooldown block /${interaction.commandName} user:${userId} retry_after:${retry}s`);
+            logger.info(`Cooldown block /${interactionCommandName} user:${userId} retry_after:${retry}s`);
             if (!interaction.replied && !interaction.deferred) {
-              await sendCooldownReply(interaction, interaction.commandName, retry);
+              await sendCooldownReply(interaction, interactionCommandName, retry);
             }
             return;
           }
