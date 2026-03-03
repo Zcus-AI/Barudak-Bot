@@ -30,35 +30,45 @@ function loadCommands(client) {
   const commandsPath = path.join(__dirname, 'src', 'commands');
   const files = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js'));
   const payload = [];
+  let loaded = 0;
+  let skipped = 0;
 
   for (const file of files) {
     const commandPath = path.join(commandsPath, file);
     const command = safeRequireModule(commandPath, `command ${file}`);
     if (!command) {
+      skipped += 1;
       continue;
     }
     if (!command.data?.name || typeof command.execute !== 'function') {
+      skipped += 1;
       logger.warn(`Command ${file} dilewati karena format tidak valid`);
       continue;
     }
     client.commands.set(command.data.name, command);
     payload.push(command.data);
+    loaded += 1;
   }
 
+  logger.info(`Command loader: loaded=${loaded} skipped=${skipped} total=${files.length}`);
   return payload;
 }
 
 function loadEvents(client) {
   const eventsPath = path.join(__dirname, 'src', 'events');
   const files = fs.readdirSync(eventsPath).filter((f) => f.endsWith('.js'));
+  let loaded = 0;
+  let skipped = 0;
 
   for (const file of files) {
     const eventPath = path.join(eventsPath, file);
     const event = safeRequireModule(eventPath, `event ${file}`);
     if (!event) {
+      skipped += 1;
       continue;
     }
     if (!event.name || typeof event.execute !== 'function') {
+      skipped += 1;
       logger.warn(`Event ${file} dilewati karena format tidak valid`);
       continue;
     }
@@ -68,7 +78,10 @@ function loadEvents(client) {
     } else {
       client.on(event.name, (...args) => event.execute(...args, client));
     }
+    loaded += 1;
   }
+
+  logger.info(`Event loader: loaded=${loaded} skipped=${skipped} total=${files.length}`);
 }
 
 async function registerCommands(commandData) {

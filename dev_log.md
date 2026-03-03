@@ -284,3 +284,16 @@ File Diubah:
 Deskripsi: Menambahkan cakupan test untuk `pruneExpired()` agar memastikan hanya key cooldown yang sudah expired yang dihapus, sementara key aktif tetap dipertahankan. Test juga memverifikasi pertambahan ukuran map saat key tambahan didaftarkan.
 Status Runtime: Lolos test (cooldown, interaction-create, uptime)
 Next Plan: Tambahkan test unit untuk fallback loader command/event supaya skenario module require gagal ter-cover.
+
+[ITERATION #22]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Startup loader summary logs (commands/events)
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan log ringkasan saat startup untuk command/event loader berupa jumlah `loaded`, `skipped`, dan `total`. Ini mempermudah observability ketika ada modul yang gagal dimuat tanpa perlu menelusuri log per-file satu per satu.
+Status Runtime: Lolos syntax check + test (index, cooldown, interaction-create, uptime)
+Next Plan: Tambah test kecil untuk memverifikasi format output logger summary saat loader memproses modul invalid.
