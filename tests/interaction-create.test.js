@@ -270,6 +270,35 @@ async function testSlowCommandTimingPathDoesNotThrow() {
   }
 }
 
+async function testCommandNameWithSpacesIsNormalized() {
+  let executed = false;
+  const interaction = {
+    commandName: '  ping  ',
+    user: { id: 'user-10' },
+    replied: false,
+    deferred: false,
+    isChatInputCommand: () => true,
+    reply: async () => {}
+  };
+
+  const client = {
+    commands: new Map([
+      [
+        'ping',
+        {
+          execute: async () => {
+            executed = true;
+          }
+        }
+      ]
+    ]),
+    cooldowns: {}
+  };
+
+  await interactionEvent.execute(interaction, client);
+  assert.strictEqual(executed, true, 'Trimmed commandName should resolve to registered command');
+}
+
 (async () => {
   await testCooldownFallbackWhenManagerMissing();
   await testCooldownBlockUsesMinimumRetryOneSecond();
@@ -280,5 +309,6 @@ async function testSlowCommandTimingPathDoesNotThrow() {
   await testMissingCommandRegistryIsIgnoredSafely();
   await testCooldownReplyBenignErrorDoesNotThrow();
   await testSlowCommandTimingPathDoesNotThrow();
+  await testCommandNameWithSpacesIsNormalized();
   console.log('interaction-create.test.js passed');
 })();

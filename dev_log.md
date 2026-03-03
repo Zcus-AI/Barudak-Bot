@@ -678,3 +678,16 @@ File Diubah:
 Deskripsi: Menambahkan try/catch khusus di `client.login()` agar error login lebih terarah: kasus `TokenInvalid` diberi pesan spesifik, sementara error lain tetap dilog lengkap. Error tetap dilempar ke handler atas agar flow kegagalan tetap konsisten.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah klasifikasi kode error login lain (mis. network/ratelimit) untuk diagnosis startup yang lebih cepat.
+
+[ITERATION #51]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Unit test normalisasi commandName bertipe whitespace
+File Dibuat:
+- (none)
+File Diubah:
+- tests/interaction-create.test.js
+- dev_log.md
+Deskripsi: Menambahkan test `testCommandNameWithSpacesIsNormalized()` untuk memastikan commandName dengan spasi di kiri/kanan tetap di-trim dan berhasil mengeksekusi command yang terdaftar. Ini mengunci behavior refactor normalisasi commandName agar tidak regresi.
+Status Runtime: Lolos seluruh test utama (interaction-create, cooldown, uptime, ping, metrics-format).
+Next Plan: Tambah test untuk verifikasi log/prefix commandName agar output log konsisten pasca normalisasi.
