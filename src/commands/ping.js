@@ -43,9 +43,12 @@ const LATENCY_TIER_BY_BADGE = {
   [LATENCY_BADGES.unknown]: 'unknown'
 };
 
-function getLatencyTier(wsPingMs) {
-  const badge = getLatencyBadge(wsPingMs);
+function getTierFromBadge(badge) {
   return LATENCY_TIER_BY_BADGE[badge] || LATENCY_TIER_BY_BADGE[LATENCY_BADGES.unknown];
+}
+
+function getLatencyTier(wsPingMs) {
+  return getTierFromBadge(getLatencyBadge(wsPingMs));
 }
 
 function getIsoNow() {
@@ -76,7 +79,7 @@ function getPingMetrics(interaction, client) {
     latencyMs,
     wsPingMs,
     badge,
-    tier: getLatencyTier(wsPingMs)
+    tier: getTierFromBadge(badge)
   };
 }
 
