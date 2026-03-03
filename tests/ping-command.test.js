@@ -45,6 +45,15 @@ assert.strictEqual(segments.wsText, '42ms');
 assert.strictEqual(segments.ref, '456789');
 assert.strictEqual(segments.scope, 'dm');
 assert.strictEqual(segments.at, '2026-01-01T00:00:00.000Z');
+
+const guildSegments = cmd.buildPingSegments(
+  { id: 'xyz987654321', guildId: '999', createdTimestamp: Date.now() - 100 },
+  { ws: { ping: 260 } },
+  '2026-01-01T00:00:00.000Z'
+);
+assert.strictEqual(guildSegments.badge, '🔴');
+assert.strictEqual(guildSegments.tier, 'poor');
+assert.strictEqual(guildSegments.scope, 'guild');
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
