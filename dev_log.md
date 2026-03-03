@@ -784,3 +784,17 @@ File Diubah:
 Deskripsi: Memperbarui log pada `runAutonomousIteration()` agar menyertakan metrik jumlah file yang dicek (`checked`) serta rasio file hilang (`missing=x/y`). Ini membuat observability loop autonomous lebih informatif untuk diagnosis cepat.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan menambahkan durasi eksekusi autonomous check untuk profiling ringan loop startup.
+
+[ITERATION #59]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: /uptime menampilkan nilai uptime detik mentah
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/uptime.js
+- tests/uptime-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan baris `🧮 UptimeSec` pada output /uptime untuk memberikan nilai detik mentah (integer) selain format human-readable. Ini memudahkan korelasi cepat saat monitoring/log comparison.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan opsi toggle detail output /uptime agar field tambahan bisa disembunyikan saat mode ringkas.

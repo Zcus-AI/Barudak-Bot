@@ -31,6 +31,18 @@ assert.ok(
     .includes('🏗️ Arch: arm64')
 );
 assert.ok(
+  cmd
+    .buildUptimeMessage({
+      uptime: () => 3661,
+      memoryUsage: () => ({ rss: 1 }),
+      platform: 'linux',
+      pid: 1,
+      version: 'v1.0.0',
+      arch: 'arm64'
+    })
+    .includes('🧮 UptimeSec: 3661')
+);
+assert.ok(
   cmd.buildUptimeMessage({ platform: 'linux', pid: 777 }).includes('🧠 RAM (RSS):'),
   'buildUptimeMessage should fallback safely when uptime/memoryUsage methods are missing'
 );
@@ -71,6 +83,7 @@ assert.ok(
   assert.strictEqual(payload.ephemeral, true, 'uptime reply should be ephemeral');
   assert.ok(payload.content.includes('⏱️ Uptime:'), 'uptime reply should contain uptime label');
   assert.ok(payload.content.includes('🧠 RAM (RSS):'), 'uptime reply should contain memory label');
+  assert.ok(payload.content.includes('🧮 UptimeSec:'), 'uptime reply should contain raw uptime seconds label');
   assert.ok(payload.content.includes('🖥️ Runtime:'), 'uptime reply should contain runtime label');
   assert.ok(payload.content.includes('pid:'), 'uptime reply should include process pid');
   assert.ok(payload.content.includes('🧩 Node:'), 'uptime reply should include node version label');

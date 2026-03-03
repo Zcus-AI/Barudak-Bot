@@ -21,7 +21,9 @@ function buildUptimeMessage(runtime = process) {
   const nodeVersion = runtime?.version || process.version;
   const arch = String(runtime?.arch || process.arch);
 
-  return `⏱️ Uptime: ${uptimeText}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}\n🏗️ Arch: ${arch}`;
+  const uptimeSecondsRaw = Math.max(0, Math.floor(Number(uptimeSeconds) || 0));
+
+  return `⏱️ Uptime: ${uptimeText}\n🧮 UptimeSec: ${uptimeSecondsRaw}\n🧠 RAM (RSS): ${rssText}\n🖥️ Runtime: ${runtimeText}\n🧩 Node: ${nodeVersion}\n🏗️ Arch: ${arch}`;
 }
 
 module.exports = {
