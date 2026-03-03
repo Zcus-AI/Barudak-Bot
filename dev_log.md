@@ -297,3 +297,16 @@ File Diubah:
 Deskripsi: Menambahkan log ringkasan saat startup untuk command/event loader berupa jumlah `loaded`, `skipped`, dan `total`. Ini mempermudah observability ketika ada modul yang gagal dimuat tanpa perlu menelusuri log per-file satu per satu.
 Status Runtime: Lolos syntax check + test (index, cooldown, interaction-create, uptime)
 Next Plan: Tambah test kecil untuk memverifikasi format output logger summary saat loader memproses modul invalid.
+
+[ITERATION #23]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Upgrade command /ping dengan latency info
+File Dibuat:
+- tests/ping-command.test.js
+File Diubah:
+- src/commands/ping.js
+- dev_log.md
+Deskripsi: Menambahkan fitur kecil pada /ping untuk menampilkan estimasi latency berdasarkan `interaction.createdTimestamp`, dengan fallback `n/a` jika timestamp tidak valid. Ditambahkan helper `getLatencyMs()` dan unit test untuk formatter + payload reply command.
+Status Runtime: Lolos syntax check + test (ping, cooldown, interaction-create, uptime)
+Next Plan: Tambah opsi menampilkan websocket ping client (jika tersedia) untuk observability jaringan.
