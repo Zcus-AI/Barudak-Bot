@@ -80,6 +80,10 @@ module.exports = {
       }
 
       const interactionCommandName = interaction.commandName.trim();
+      const scope = interaction.guildId ? 'guild' : 'dm';
+      const userIdForLog = interaction.user?.id || 'unknown-user';
+      logger.info(`Terima ${commandLabel(interactionCommandName)} dari ${userIdForLog} di ${scope}`);
+
       const command = client.commands.get(interactionCommandName);
       if (!command) {
         logger.warn(`Command ${commandLabel(interactionCommandName)} tidak ditemukan di registry`);
