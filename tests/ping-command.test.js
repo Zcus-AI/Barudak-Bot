@@ -7,6 +7,10 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: Date.now() - 250 }) >= 0
 assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 42.9 } }), 42);
 assert.strictEqual(cmd.getWebsocketPingMs({ ws: { ping: 'invalid' } }), null);
+assert.strictEqual(cmd.getLatencyBadge(50), '🟢');
+assert.strictEqual(cmd.getLatencyBadge(200), '🟡');
+assert.strictEqual(cmd.getLatencyBadge(500), '🔴');
+assert.strictEqual(cmd.getLatencyBadge(null), '⚪');
 assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
   '2026-01-01T00:00:00.000Z'
@@ -43,7 +47,8 @@ assert.ok(
 
   assert.ok(payload, 'ping should send a reply payload');
   assert.strictEqual(payload.ephemeral, true, 'ping reply should be ephemeral');
-  assert.ok(payload.content.startsWith('🏓 Pong! Latency:'), 'ping reply should include latency info');
+  assert.ok(payload.content.startsWith('🏓 Pong!'), 'ping reply should include pong prefix');
+  assert.ok(/🏓 Pong! (🟢|🟡|🔴|⚪) Latency:/.test(payload.content), 'ping reply should include latency badge');
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
   assert.ok(/\| At: .*Z$/.test(payload.content), 'ping reply should include ISO timestamp');

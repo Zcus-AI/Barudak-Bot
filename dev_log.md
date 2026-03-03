@@ -864,3 +864,17 @@ File Diubah:
 Deskripsi: Menambahkan log `Event aktif: ...` setelah event loader selesai untuk menampilkan event yang benar-benar terdaftar (dengan penanda `(once)` jika relevan). Ini melengkapi observability startup agar setara dengan daftar command aktif.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan mode ringkas log startup untuk environment produksi dengan noise minimal.
+
+[ITERATION #65]
+Tanggal: 2026-03-03
+Jenis Perubahan: Feature Improvement
+Fitur: Indikator kualitas koneksi pada output /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan badge status koneksi berbasis websocket ping pada command /ping (`🟢/🟡/🔴/⚪`). Output ping kini lebih informatif untuk diagnosis cepat tanpa mengubah struktur metrik utama yang sudah ada.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan opsi threshold badge configurable via env jika diperlukan tuning antar deployment.
