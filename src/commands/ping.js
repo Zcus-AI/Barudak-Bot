@@ -24,10 +24,18 @@ function formatMs(value) {
   return value === null ? 'n/a' : `${value}ms`;
 }
 
+function normalizePingMs(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 0) return null;
+  return Math.floor(parsed);
+}
+
 function getLatencyBadge(wsPingMs) {
-  if (wsPingMs === null) return LATENCY_BADGES.unknown;
-  if (wsPingMs <= LATENCY_THRESHOLDS_MS.good) return LATENCY_BADGES.good;
-  if (wsPingMs <= LATENCY_THRESHOLDS_MS.medium) return LATENCY_BADGES.medium;
+  const safePing = normalizePingMs(wsPingMs);
+  if (safePing === null) return LATENCY_BADGES.unknown;
+  if (safePing <= LATENCY_THRESHOLDS_MS.good) return LATENCY_BADGES.good;
+  if (safePing <= LATENCY_THRESHOLDS_MS.medium) return LATENCY_BADGES.medium;
   return LATENCY_BADGES.bad;
 }
 
@@ -67,6 +75,7 @@ module.exports = {
   cooldownMs: 3000,
   getLatencyMs: getInteractionLatencyMs,
   getWebsocketPingMs,
+  normalizePingMs,
   getLatencyBadge,
   normalizeIsoTimestamp,
   buildPingMessage,

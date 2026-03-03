@@ -891,3 +891,17 @@ File Diubah:
 Deskripsi: Merapikan command /ping dengan mengekstrak nilai magic number dan emoji badge ke konstanta `LATENCY_THRESHOLDS_MS` dan `LATENCY_BADGES`. Ini membuat aturan klasifikasi latency lebih mudah dibaca dan di-maintain tanpa mengubah behavior output.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan mengekspor konstanta threshold untuk test/konfigurasi jika ke depan dibutuhkan tuning dinamis.
+
+[ITERATION #67]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Normalisasi defensif nilai ping untuk klasifikasi badge
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan helper `normalizePingMs()` agar nilai ping null/undefined/kosong/invalid/negatif tidak salah diklasifikasikan sebagai koneksi bagus. `getLatencyBadge()` kini selalu memproses nilai ping yang sudah disanitasi sehingga hasil badge lebih akurat.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan pemakaian helper normalisasi yang sama untuk metrik latency lain agar konsisten lintas command.
