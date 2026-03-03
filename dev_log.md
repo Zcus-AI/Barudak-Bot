@@ -164,3 +164,16 @@ File Diubah:
 Deskripsi: Refactor CooldownManager dengan normalisasi key/cooldown yang lebih ketat, dukungan timestamp injeksi untuk test deterministik, dan pencegahan entry map stale saat cooldown <= 0. Event interaction sekarang memakai normalisasi cooldown terpusat agar lebih konsisten.
 Status Runtime: Lolos syntax check + test (cooldown & uptime)
 Next Plan: Tambah unit test untuk interaction error-path (reply vs followUp) tanpa mengubah behavior command existing.
+
+[ITERATION #13]
+Tanggal: 2026-03-03
+Jenis Perubahan: Validation Improvement
+Fitur: Defensive validation pada cooldown pipeline interaction
+File Dibuat:
+- tests/interaction-create.test.js
+File Diubah:
+- src/events/interactionCreate.js
+- dev_log.md
+Deskripsi: Menambahkan fallback aman saat `client.cooldowns` tidak memiliki method yang lengkap, validasi user id sebelum membangun cooldown key, serta clamp retry cooldown minimal 1 detik agar pesan user tidak menampilkan 0 detik. Ditambah unit test untuk memastikan fallback validation dan behavior cooldown-block tetap benar.
+Status Runtime: Lolos syntax check + test (cooldown, uptime, interaction-create)
+Next Plan: Tambah validasi command metadata (nama unik/format) saat command loader bootstrap.

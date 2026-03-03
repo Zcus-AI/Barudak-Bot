@@ -13,19 +13,34 @@ module.exports = {
         return;
       }
 
-      const cooldownMs = client.cooldowns.normalizeCooldownMs(command.cooldownMs);
+      const cooldowns = client.cooldowns;
+      const normalizeCooldownMs =
+        cooldowns && typeof cooldowns.normalizeCooldownMs === 'function'
+          ? cooldowns.normalizeCooldownMs.bind(cooldowns)
+          : (value) => Math.max(0, Number(value) || 0);
+      const cooldownCheck =
+        cooldowns && typeof cooldowns.check === 'function'
+          ? cooldowns.check.bind(cooldowns)
+          : () => ({ allowed: true, retryAfterMs: 0 });
+
+      const cooldownMs = normalizeCooldownMs(command.cooldownMs);
       if (cooldownMs > 0) {
-        const key = `${interaction.commandName}:${interaction.user.id}`;
-        const check = client.cooldowns.check(key, cooldownMs);
-        if (!check.allowed) {
-          const retry = Math.ceil(check.retryAfterMs / 1000);
-          if (!interaction.replied && !interaction.deferred) {
-            await interaction.reply({
-              content: `⏳ Tunggu ${retry} detik sebelum memakai command ini lagi.`,
-              ephemeral: true
-            });
+        const userId = interaction.user?.id;
+        if (!userId) {
+          logger.warn(`Lewati cooldown /${interaction.commandName} karena user id tidak tersedia`);
+        } else {
+          const key = `${interaction.commandName}:${userId}`;
+          const check = cooldownCheck(key, cooldownMs);
+          if (!check.allowed) {
+            const retry = Math.max(1, Math.ceil(check.retryAfterMs / 1000));
+            if (!interaction.replied && !interaction.deferred) {
+              await interaction.reply({
+                content: `⏳ Tunggu ${retry} detik sebelum memakai command ini lagi.`,
+                ephemeral: true
+              });
+            }
+            return;
           }
-          return;
         }
       }
 
