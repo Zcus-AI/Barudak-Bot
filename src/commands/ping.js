@@ -25,7 +25,8 @@ function formatMs(value) {
 }
 
 function normalizePingMs(value) {
-  if (value === null || value === undefined || value === '') return null;
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string' && !value.trim()) return null;
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 0) return null;
   return Math.floor(parsed);

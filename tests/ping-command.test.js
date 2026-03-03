@@ -12,6 +12,7 @@ assert.strictEqual(cmd.normalizePingMs(50.8), 50);
 assert.strictEqual(cmd.normalizePingMs('invalid'), null);
 assert.strictEqual(cmd.normalizePingMs(-1), null);
 assert.strictEqual(cmd.normalizePingMs(''), null);
+assert.strictEqual(cmd.normalizePingMs('   '), null);
 assert.strictEqual(cmd.getLatencyBadge(50), '🟢');
 assert.strictEqual(cmd.getLatencyBadge(100), '🟢');
 assert.strictEqual(cmd.getLatencyBadge(200), '🟡');
