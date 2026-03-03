@@ -20,6 +20,10 @@ assert.strictEqual(cmd.getLatencyBadge(251), '🔴');
 assert.strictEqual(cmd.getLatencyBadge(500), '🔴');
 assert.strictEqual(cmd.getLatencyBadge(null), '⚪');
 assert.strictEqual(cmd.getLatencyBadge(-10), '⚪');
+const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
+assert.strictEqual(typeof metrics.latencyMs, 'number');
+assert.strictEqual(metrics.wsPingMs, 120);
+assert.strictEqual(metrics.badge, '🟡');
 assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
   '2026-01-01T00:00:00.000Z'

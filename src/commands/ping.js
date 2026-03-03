@@ -59,12 +59,20 @@ function normalizeIsoTimestamp(value) {
   return parsed.toISOString();
 }
 
-function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
+function getPingMetrics(interaction, client) {
   const latencyMs = getInteractionLatencyMs(interaction);
   const wsPingMs = getWebsocketPingMs(client);
+  return {
+    latencyMs,
+    wsPingMs,
+    badge: getLatencyBadge(wsPingMs)
+  };
+}
+
+function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
+  const metrics = getPingMetrics(interaction, client);
   const safeIsoNow = normalizeIsoTimestamp(nowIso);
-  const badge = getLatencyBadge(wsPingMs);
-  return `🏓 Pong! ${badge} Latency: ${formatMs(latencyMs)} | WS: ${formatMs(wsPingMs)} | At: ${safeIsoNow}`;
+  return `🏓 Pong! ${metrics.badge} Latency: ${formatMs(metrics.latencyMs)} | WS: ${formatMs(metrics.wsPingMs)} | At: ${safeIsoNow}`;
 }
 
 module.exports = {
@@ -77,6 +85,7 @@ module.exports = {
   getWebsocketPingMs,
   normalizePingMs,
   getLatencyBadge,
+  getPingMetrics,
   normalizeIsoTimestamp,
   buildPingMessage,
   async execute(interaction, client) {
