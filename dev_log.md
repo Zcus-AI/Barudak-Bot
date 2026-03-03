@@ -352,3 +352,17 @@ File Diubah:
 Deskripsi: Menambahkan guard pada `registerCommands()` untuk skip aman saat commandData kosong/invalid, serta try/catch agar kegagalan REST register command tidak menghentikan proses startup bot. Error tetap tercatat jelas di log dan fungsi mengembalikan status boolean.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambahkan unit test ringan untuk helper bootstrap agar return status register dapat diverifikasi otomatis.
+
+[ITERATION #27]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Perluasan test edge-case formatter metrics + ping fallback
+File Dibuat:
+- (none)
+File Diubah:
+- tests/metrics-format.test.js
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan test edge-case untuk formatter metrics (nilai negatif/0 dan konversi MB) serta verifikasi command /ping menampilkan latency numerik saat timestamp valid dan fallback `n/a` saat timestamp invalid.
+Status Runtime: Lolos seluruh test utama (metrics-format, ping, cooldown, interaction-create, uptime).
+Next Plan: Tambah test bootstrap helper agar skenario register command gagal terverifikasi tanpa perlu network call.

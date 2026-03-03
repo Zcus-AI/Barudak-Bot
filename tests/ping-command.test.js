@@ -20,6 +20,16 @@ assert.strictEqual(cmd.getLatencyMs({ createdTimestamp: 'invalid' }), null);
   assert.ok(payload, 'ping should send a reply payload');
   assert.strictEqual(payload.ephemeral, true, 'ping reply should be ephemeral');
   assert.ok(payload.content.startsWith('🏓 Pong! Latency:'), 'ping reply should include latency info');
+  assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
+
+  let invalidPayload = null;
+  await cmd.execute({
+    createdTimestamp: 'invalid',
+    reply: async (data) => {
+      invalidPayload = data;
+    }
+  });
+  assert.ok(invalidPayload.content.includes('Latency: n/a'), 'ping should fallback to n/a latency when timestamp invalid');
 
   console.log('ping-command.test.js passed');
 })();
