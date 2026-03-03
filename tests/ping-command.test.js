@@ -11,7 +11,14 @@ assert.strictEqual(
   cmd.normalizeIsoTimestamp('2026-01-01T00:00:00.000Z'),
   '2026-01-01T00:00:00.000Z'
 );
+assert.strictEqual(
+  cmd.normalizeIsoTimestamp('2026-01-01 00:00:00Z'),
+  '2026-01-01T00:00:00.000Z',
+  'normalizeIsoTimestamp should normalize valid non-canonical date strings'
+);
 assert.ok(/\d{4}-\d{2}-\d{2}T/.test(cmd.normalizeIsoTimestamp('invalid-date')));
+assert.ok(/\d{4}-\d{2}-\d{2}T/.test(cmd.normalizeIsoTimestamp('   ')));
+assert.ok(/\d{4}-\d{2}-\d{2}T/.test(cmd.normalizeIsoTimestamp(null)));
 assert.ok(
   cmd.buildPingMessage({ createdTimestamp: Date.now() - 25 }, { ws: { ping: 10 } }, '2026-01-01T00:00:00.000Z').includes('WS: 10ms'),
   'buildPingMessage should include websocket ping in ms format'

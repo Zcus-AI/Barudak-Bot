@@ -597,3 +597,16 @@ File Diubah:
 Deskripsi: Memperbaiki error handling `readControl()` agar membedakan kasus file tidak ditemukan (warning) dan file rusak/gagal parse (error lengkap). Sistem tetap fallback ke `autonomous_mode=false` tanpa menghentikan startup flow.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Tambah validasi struktur isi control.json (tipe boolean) agar fallback lebih presisi saat field malformed.
+
+[ITERATION #45]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Perluasan test normalisasi timestamp /ping
+File Dibuat:
+- (none)
+File Diubah:
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan cakupan test untuk `normalizeIsoTimestamp()` pada kasus string tanggal valid non-kanonik, string whitespace, dan nilai null. Tujuannya memastikan fallback timestamp tetap aman dan konsisten di berbagai input edge-case.
+Status Runtime: Lolos seluruh test utama (ping, metrics-format, uptime, cooldown, interaction-create).
+Next Plan: Tambah test untuk helper bootstrap (readControl/registerCommands) agar jalur fallback lebih terukur.
