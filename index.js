@@ -157,10 +157,14 @@ async function runAutonomousIteration() {
   ];
 
   const missing = checks.filter(([, ok]) => !ok).map(([file]) => file);
-  if (missing.length > 0) {
-    logger.warn(`Autonomous check: file penting belum ada -> ${missing.join(', ')}`);
+  const checkedCount = checks.length;
+  const missingCount = missing.length;
+  if (missingCount > 0) {
+    logger.warn(
+      `Autonomous check: missing=${missingCount}/${checkedCount} -> ${missing.join(', ')}`
+    );
   } else {
-    logger.info('Autonomous check: baseline project stabil.');
+    logger.info(`Autonomous check: baseline project stabil. checked=${checkedCount}`);
   }
 }
 
