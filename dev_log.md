@@ -878,3 +878,16 @@ File Diubah:
 Deskripsi: Menambahkan badge status koneksi berbasis websocket ping pada command /ping (`🟢/🟡/🔴/⚪`). Output ping kini lebih informatif untuk diagnosis cepat tanpa mengubah struktur metrik utama yang sudah ada.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan opsi threshold badge configurable via env jika diperlukan tuning antar deployment.
+
+[ITERATION #66]
+Tanggal: 2026-03-03
+Jenis Perubahan: Refactor Improvement
+Fitur: Sentralisasi konstanta badge/threshold latency pada /ping
+File Dibuat:
+- (none)
+File Diubah:
+- src/commands/ping.js
+- dev_log.md
+Deskripsi: Merapikan command /ping dengan mengekstrak nilai magic number dan emoji badge ke konstanta `LATENCY_THRESHOLDS_MS` dan `LATENCY_BADGES`. Ini membuat aturan klasifikasi latency lebih mudah dibaca dan di-maintain tanpa mengubah behavior output.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan mengekspor konstanta threshold untuk test/konfigurasi jika ke depan dibutuhkan tuning dinamis.

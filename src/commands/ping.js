@@ -8,15 +8,27 @@ function getWebsocketPingMs(client) {
   return Math.floor(wsPing);
 }
 
+const LATENCY_BADGES = {
+  unknown: '⚪',
+  good: '🟢',
+  medium: '🟡',
+  bad: '🔴'
+};
+
+const LATENCY_THRESHOLDS_MS = {
+  good: 100,
+  medium: 250
+};
+
 function formatMs(value) {
   return value === null ? 'n/a' : `${value}ms`;
 }
 
 function getLatencyBadge(wsPingMs) {
-  if (wsPingMs === null) return '⚪';
-  if (wsPingMs <= 100) return '🟢';
-  if (wsPingMs <= 250) return '🟡';
-  return '🔴';
+  if (wsPingMs === null) return LATENCY_BADGES.unknown;
+  if (wsPingMs <= LATENCY_THRESHOLDS_MS.good) return LATENCY_BADGES.good;
+  if (wsPingMs <= LATENCY_THRESHOLDS_MS.medium) return LATENCY_BADGES.medium;
+  return LATENCY_BADGES.bad;
 }
 
 function getIsoNow() {
