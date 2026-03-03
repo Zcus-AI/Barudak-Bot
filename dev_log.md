@@ -1786,3 +1786,22 @@ File Diubah:
 Deskripsi: Menambahkan test untuk memastikan `getPingMetrics()` menjaga konsistensi badge+tier pada nilai batas WS ping (100ms => good/🟢, 250ms => medium/🟡). Ini mencegah regresi aturan klasifikasi saat refactor berikutnya.
 Status Runtime: Lolos seluruh test utama (ping, uptime, cooldown, interaction-create, metrics-format).
 Next Plan: Tambah test skenario WS ping tepat di atas threshold (mis. 251ms) langsung via getPingMetrics untuk parity penuh dengan test helper badge.
+
+[ITERATION AUTO #94]
+Tanggal: 2026-03-03T07:28:36.496Z
+Jenis Perubahan: Testing Improvement
+Deskripsi: Testing Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #95]
+Tanggal: 2026-03-03
+Jenis Perubahan: Logging Improvement
+Fitur: Bootstrap payload summary logging
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan log ringkas `Bootstrap summary: command_payload=<n>` setelah command/event loader selesai. Ini memudahkan verifikasi cepat jumlah command yang siap diregistrasikan ke Discord saat startup.
+Status Runtime: Lolos syntax check + seluruh test utama.
+Next Plan: Pertimbangkan menambahkan field event_count di bootstrap summary agar metrik startup lebih komplit dalam satu baris.

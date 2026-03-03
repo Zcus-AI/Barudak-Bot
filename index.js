@@ -223,6 +223,7 @@ async function bootstrap() {
 
   const commandData = loadCommands(client);
   loadEvents(client);
+  logger.info(`Bootstrap summary: command_payload=${commandData.length}`);
 
   process.on('unhandledRejection', (err) => logger.error('Unhandled Rejection', err));
   process.on('uncaughtException', (err) => logger.error('Uncaught Exception', err));
