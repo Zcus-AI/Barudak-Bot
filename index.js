@@ -231,8 +231,20 @@ async function bootstrap() {
     iterationDelayMs: 60000
   });
 
-  const commandData = loadCommands(client);
-  loadEvents(client);
+  let commandData = [];
+  try {
+    commandData = loadCommands(client);
+  } catch (error) {
+    logger.error('Gagal load commands saat bootstrap, lanjut dengan payload kosong.', error);
+    commandData = [];
+  }
+
+  try {
+    loadEvents(client);
+  } catch (error) {
+    logger.error('Gagal load events saat bootstrap, bot tetap lanjut startup.', error);
+  }
+
   logger.info(`Bootstrap summary: command_payload=${commandData.length}`);
 
   process.on('unhandledRejection', (err) => logger.error('Unhandled Rejection', err));
