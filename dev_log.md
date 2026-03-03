@@ -1767,3 +1767,22 @@ File Diubah:
 Deskripsi: Menambahkan try/catch saat memanggil `runAutonomousIteration()` di `bootstrap()`. Jika autonomous check gagal, error kini dilog jelas namun bot tetap berjalan normal setelah login Discord.
 Status Runtime: Lolos syntax check + seluruh test utama.
 Next Plan: Pertimbangkan retry ringan terkontrol untuk autonomous iteration bila kegagalan bersifat sementara.
+
+[ITERATION AUTO #93]
+Tanggal: 2026-03-03T07:24:50.177Z
+Jenis Perubahan: Error Handling Improvement
+Deskripsi: Error Handling Improvement via OpenClaw agent dengan batas perubahan <=200 baris.
+Status: Completed
+
+[ITERATION #94]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Test batas klasifikasi tier pada getPingMetrics
+File Dibuat:
+- (none)
+File Diubah:
+- tests/ping-command.test.js
+- dev_log.md
+Deskripsi: Menambahkan test untuk memastikan `getPingMetrics()` menjaga konsistensi badge+tier pada nilai batas WS ping (100ms => good/🟢, 250ms => medium/🟡). Ini mencegah regresi aturan klasifikasi saat refactor berikutnya.
+Status Runtime: Lolos seluruh test utama (ping, uptime, cooldown, interaction-create, metrics-format).
+Next Plan: Tambah test skenario WS ping tepat di atas threshold (mis. 251ms) langsung via getPingMetrics untuk parity penuh dengan test helper badge.

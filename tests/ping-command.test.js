@@ -33,6 +33,15 @@ assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
 assert.strictEqual(metrics.badge, '🟡');
 assert.strictEqual(metrics.tier, 'medium');
+
+const metricsBoundaryGood = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 100 } });
+assert.strictEqual(metricsBoundaryGood.badge, '🟢');
+assert.strictEqual(metricsBoundaryGood.tier, 'good');
+
+const metricsBoundaryMedium = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 250 } });
+assert.strictEqual(metricsBoundaryMedium.badge, '🟡');
+assert.strictEqual(metricsBoundaryMedium.tier, 'medium');
+
 const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
 assert.strictEqual(metricsInvalid.latencyMs, null);
 assert.strictEqual(metricsInvalid.wsPingMs, null);
