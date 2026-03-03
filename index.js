@@ -17,13 +17,26 @@ function readControl() {
   }
 }
 
+function safeRequireModule(modulePath, label) {
+  try {
+    return require(modulePath);
+  } catch (error) {
+    logger.error(`Gagal load ${label}`, error);
+    return null;
+  }
+}
+
 function loadCommands(client) {
   const commandsPath = path.join(__dirname, 'src', 'commands');
   const files = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js'));
   const payload = [];
 
   for (const file of files) {
-    const command = require(path.join(commandsPath, file));
+    const commandPath = path.join(commandsPath, file);
+    const command = safeRequireModule(commandPath, `command ${file}`);
+    if (!command) {
+      continue;
+    }
     if (!command.data?.name || typeof command.execute !== 'function') {
       logger.warn(`Command ${file} dilewati karena format tidak valid`);
       continue;
@@ -40,7 +53,11 @@ function loadEvents(client) {
   const files = fs.readdirSync(eventsPath).filter((f) => f.endsWith('.js'));
 
   for (const file of files) {
-    const event = require(path.join(eventsPath, file));
+    const eventPath = path.join(eventsPath, file);
+    const event = safeRequireModule(eventPath, `event ${file}`);
+    if (!event) {
+      continue;
+    }
     if (!event.name || typeof event.execute !== 'function') {
       logger.warn(`Event ${file} dilewati karena format tidak valid`);
       continue;

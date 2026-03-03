@@ -258,3 +258,16 @@ File Diubah:
 Deskripsi: Menambahkan validasi defensif agar interaction di-skip aman ketika `client.commands` tidak valid atau `interaction.commandName` kosong/non-string. Ditambah 2 unit test untuk memastikan kedua skenario ini tidak melempar error dan tidak mengeksekusi command.
 Status Runtime: Lolos syntax check + test (interaction-create, cooldown, uptime)
 Next Plan: Tambah validasi ringan untuk payload command response agar error log lebih spesifik saat reply API reject.
+
+[ITERATION #20]
+Tanggal: 2026-03-03
+Jenis Perubahan: Error Handling Improvement
+Fitur: Safe module loader untuk command/event bootstrap
+File Dibuat:
+- (none)
+File Diubah:
+- index.js
+- dev_log.md
+Deskripsi: Menambahkan `safeRequireModule()` pada proses load command dan event agar error saat `require` file rusak/tidak valid tidak menghentikan seluruh bootstrap bot. File bermasalah kini di-skip dengan log error terstruktur, sementara modul lain tetap berjalan normal.
+Status Runtime: Lolos syntax check + test (index, interaction-create, cooldown, uptime)
+Next Plan: Tambah ringkasan jumlah command/event yang berhasil vs gagal saat startup untuk observability.
