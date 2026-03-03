@@ -71,6 +71,13 @@ function normalizeIsoTimestamp(value) {
   return parsed.toISOString();
 }
 
+function getLatencyDeltaMs(latencyMs, wsPingMs) {
+  const safeLatency = normalizePingMs(latencyMs);
+  const safeWs = normalizePingMs(wsPingMs);
+  if (safeLatency === null || safeWs === null) return null;
+  return Math.abs(safeLatency - safeWs);
+}
+
 function getPingMetrics(interaction, client) {
   const latencyMs = getInteractionLatencyMs(interaction);
   const wsPingMs = getWebsocketPingMs(client);
@@ -78,6 +85,7 @@ function getPingMetrics(interaction, client) {
   return {
     latencyMs,
     wsPingMs,
+    deltaMs: getLatencyDeltaMs(latencyMs, wsPingMs),
     badge,
     tier: getTierFromBadge(badge)
   };
@@ -104,6 +112,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
     latencyText: formatMs(metrics.latencyMs),
     wsText: formatMs(metrics.wsPingMs),
     tier: metrics.tier,
+    deltaText: formatMs(metrics.deltaMs),
     scope: getScopeLabel(interaction),
     ref: getInteractionRef(interaction),
     at: normalizeIsoTimestamp(nowIso)
@@ -112,7 +121,7 @@ function buildPingSegments(interaction, client, nowIso = getIsoNow()) {
 
 function buildPingMessage(interaction, client, nowIso = getIsoNow()) {
   const s = buildPingSegments(interaction, client, nowIso);
-  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Tier: ${s.tier} | Scope: ${s.scope} | Ref: ${s.ref} | At: ${s.at}`;
+  return `🏓 Pong! ${s.badge} Latency: ${s.latencyText} | WS: ${s.wsText} | Delta: ${s.deltaText} | Tier: ${s.tier} | Scope: ${s.scope} | Ref: ${s.ref} | At: ${s.at}`;
 }
 
 module.exports = {
@@ -127,6 +136,7 @@ module.exports = {
   getLatencyBadge,
   getLatencyTier,
   getPingMetrics,
+  getLatencyDeltaMs,
   getInteractionRef,
   getScopeLabel,
   buildPingSegments,

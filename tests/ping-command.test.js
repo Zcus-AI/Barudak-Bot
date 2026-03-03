@@ -42,6 +42,7 @@ const segments = cmd.buildPingSegments(
 );
 assert.strictEqual(segments.badge, '🟢');
 assert.strictEqual(segments.wsText, '42ms');
+assert.strictEqual(segments.deltaText, '58ms');
 assert.strictEqual(segments.ref, '456789');
 assert.strictEqual(segments.scope, 'dm');
 assert.strictEqual(segments.at, '2026-01-01T00:00:00.000Z');
@@ -54,9 +55,13 @@ const guildSegments = cmd.buildPingSegments(
 assert.strictEqual(guildSegments.badge, '🔴');
 assert.strictEqual(guildSegments.tier, 'poor');
 assert.strictEqual(guildSegments.scope, 'guild');
+assert.strictEqual(cmd.getLatencyDeltaMs(100, 80), 20);
+assert.strictEqual(cmd.getLatencyDeltaMs(null, 80), null);
+
 const metrics = cmd.getPingMetrics({ createdTimestamp: Date.now() - 100 }, { ws: { ping: 120 } });
 assert.strictEqual(typeof metrics.latencyMs, 'number');
 assert.strictEqual(metrics.wsPingMs, 120);
+assert.strictEqual(typeof metrics.deltaMs, 'number');
 assert.strictEqual(metrics.badge, '🟡');
 assert.strictEqual(metrics.tier, 'medium');
 
@@ -75,6 +80,7 @@ assert.strictEqual(metricsBoundaryPoor.tier, 'poor');
 const metricsInvalid = cmd.getPingMetrics({ createdTimestamp: 'invalid' }, { ws: { ping: -1 } });
 assert.strictEqual(metricsInvalid.latencyMs, null);
 assert.strictEqual(metricsInvalid.wsPingMs, null);
+assert.strictEqual(metricsInvalid.deltaMs, null);
 assert.strictEqual(metricsInvalid.badge, '⚪');
 assert.strictEqual(metricsInvalid.tier, 'unknown');
 assert.strictEqual(
@@ -97,7 +103,7 @@ assert.ok(
 assert.ok(
   cmd
     .buildPingMessage({ createdTimestamp: 'invalid' }, {}, '2026-01-01T00:00:00.000Z')
-    .includes('Latency: n/a | WS: n/a | Tier: unknown | Scope: dm | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
+    .includes('Latency: n/a | WS: n/a | Delta: n/a | Tier: unknown | Scope: dm | Ref: n/a | At: 2026-01-01T00:00:00.000Z'),
   'buildPingMessage should fallback for missing latency metrics and include timestamp'
 );
 
@@ -119,6 +125,7 @@ assert.ok(
   assert.ok(/🏓 Pong! (🟢|🟡|🔴|⚪) Latency:/.test(payload.content), 'ping reply should include latency badge');
   assert.ok(/Latency: \d+ms/.test(payload.content), 'ping reply should include numeric latency when timestamp valid');
   assert.ok(payload.content.includes('WS: 87ms'), 'ping reply should include websocket ping when available');
+  assert.ok(payload.content.includes('Delta:'), 'ping reply should include latency delta label');
   assert.ok(payload.content.includes('Tier: good'), 'ping reply should include latency tier label');
   assert.ok(payload.content.includes('Scope: dm'), 'ping reply should include interaction scope label');
   assert.ok(payload.content.includes('Ref: 456789'), 'ping reply should include short interaction reference');
