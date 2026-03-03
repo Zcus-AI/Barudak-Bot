@@ -271,3 +271,16 @@ File Diubah:
 Deskripsi: Menambahkan `safeRequireModule()` pada proses load command dan event agar error saat `require` file rusak/tidak valid tidak menghentikan seluruh bootstrap bot. File bermasalah kini di-skip dengan log error terstruktur, sementara modul lain tetap berjalan normal.
 Status Runtime: Lolos syntax check + test (index, interaction-create, cooldown, uptime)
 Next Plan: Tambah ringkasan jumlah command/event yang berhasil vs gagal saat startup untuk observability.
+
+[ITERATION #21]
+Tanggal: 2026-03-03
+Jenis Perubahan: Testing Improvement
+Fitur: Perluasan unit test cooldown pruning behavior
+File Dibuat:
+- (none)
+File Diubah:
+- tests/cooldown.test.js
+- dev_log.md
+Deskripsi: Menambahkan cakupan test untuk `pruneExpired()` agar memastikan hanya key cooldown yang sudah expired yang dihapus, sementara key aktif tetap dipertahankan. Test juga memverifikasi pertambahan ukuran map saat key tambahan didaftarkan.
+Status Runtime: Lolos test (cooldown, interaction-create, uptime)
+Next Plan: Tambahkan test unit untuk fallback loader command/event supaya skenario module require gagal ter-cover.

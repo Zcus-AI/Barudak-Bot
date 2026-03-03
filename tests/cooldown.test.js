@@ -23,4 +23,12 @@ const invalidKey = manager.check('   ', 5000, now);
 assert.strictEqual(invalidKey.allowed, true, 'Empty key should be treated as no-cooldown key');
 assert.strictEqual(manager.size, 1, 'Invalid key should not mutate internal map');
 
+manager.check('temp:a', 50, now);
+manager.check('temp:b', 2000, now);
+assert.strictEqual(manager.size, 3, 'Additional cooldown keys should be registered');
+manager.pruneExpired(now + 100);
+assert.strictEqual(manager.size, 2, 'pruneExpired should remove only expired keys');
+assert.strictEqual(manager.cooldowns.has('temp:a'), false, 'Expired key should be removed by pruneExpired');
+assert.strictEqual(manager.cooldowns.has('temp:b'), true, 'Non-expired key should remain after pruneExpired');
+
 console.log('cooldown.test.js passed');
