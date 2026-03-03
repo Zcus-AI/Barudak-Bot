@@ -83,7 +83,9 @@ function getPingMetrics(interaction, client) {
 function getInteractionRef(interaction) {
   const raw = String(interaction?.id || '').trim();
   if (!raw) return 'n/a';
-  return raw.slice(-6);
+  const normalized = raw.replace(/[^a-zA-Z0-9_-]/g, '');
+  if (!normalized) return 'n/a';
+  return normalized.slice(-6);
 }
 
 function buildPingSegments(interaction, client, nowIso = getIsoNow()) {

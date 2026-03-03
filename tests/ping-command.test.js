@@ -29,6 +29,8 @@ assert.strictEqual(cmd.getLatencyTier(180), 'medium');
 assert.strictEqual(cmd.getLatencyTier(500), 'poor');
 assert.strictEqual(cmd.getLatencyTier(null), 'unknown');
 assert.strictEqual(cmd.getInteractionRef({ id: '1234567890' }), '567890');
+assert.strictEqual(cmd.getInteractionRef({ id: '  abc-123_456  ' }), '23_456');
+assert.strictEqual(cmd.getInteractionRef({ id: '!!!' }), 'n/a');
 assert.strictEqual(cmd.getInteractionRef({ id: '   ' }), 'n/a');
 const segments = cmd.buildPingSegments(
   { id: 'abc123456789', createdTimestamp: Date.now() - 100 },
